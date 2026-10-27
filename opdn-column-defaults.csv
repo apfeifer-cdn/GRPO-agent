@@ -1,0 +1,1175 @@
+Sheet,Column,Class,Value or source rule,Template example
+OPDN_Header,DocEntry,SOURCE,sequence per GRPO in file; links to PDN1_Line.DocEntry,1
+OPDN_Header,DocNum,SYSTEM,leave NULL - SAP assigns or derives from the PO,1
+OPDN_Header,DocType,CONST,I,I
+OPDN_Header,CANCELED,CONST,N,N
+OPDN_Header,Handwrtten,CONST,N,N
+OPDN_Header,Printed,CONST,N,Y
+OPDN_Header,DocStatus,CONST,O,C
+OPDN_Header,InvntSttus,CONST,O,C
+OPDN_Header,Transfered,CONST,N,N
+OPDN_Header,ObjType,CONST,20,20
+OPDN_Header,DocDate,SOURCE,Inv: DATE (DD.MM.YYYY),2011-12-27 00:00:00
+OPDN_Header,DocDueDate,SOURCE,= DocDate,2011-12-27 00:00:00
+OPDN_Header,CardCode,LOOKUP,LOOKUP vendor by Inv: shipper name,V00132
+OPDN_Header,CardName,SOURCE,Inv: shipper name (row 2),United Crown International
+OPDN_Header,Address,SOURCE,Inv: shipper address lines,"Rua de Pequim, No 202A Macau Finance Center 5 andar E, em Macau    USA"
+OPDN_Header,NumAtCard,SOURCE,Inv: Invoice No.,INB11122580
+OPDN_Header,VatPercent,CONST,0,0
+OPDN_Header,VatSum,CONST,0,0
+OPDN_Header,VatSumFC,CONST,0,0
+OPDN_Header,DiscPrcnt,CONST,0,0
+OPDN_Header,DiscSum,CONST,0,0
+OPDN_Header,DiscSumFC,CONST,0,0
+OPDN_Header,DocCur,CONST,$,$
+OPDN_Header,DocRate,CONST,1,1
+OPDN_Header,DocTotal,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+OPDN_Header,DocTotalFC,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+OPDN_Header,PaidToDate,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+OPDN_Header,PaidFC,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+OPDN_Header,GrosProfit,NULL,NULL,NULL
+OPDN_Header,GrosProfFC,NULL,NULL,NULL
+OPDN_Header,Ref1,SYSTEM,leave NULL - SAP assigns or derives from the PO,1
+OPDN_Header,Ref2,NULL,NULL,NULL
+OPDN_Header,Comments,SOURCE,Based On Purchase Order <PO>. Factory invoice <no> dated <date>. EXP No. <exp>. HS <hs>. Contract <contract>.,Based On Sales Orders 3. Based On Purchase Orders 25.
+OPDN_Header,JrnlMemo,SOURCE,Goods Receipt PO - <CardCode>,Goods Receipt PO - V00132
+OPDN_Header,TransId,SYSTEM,leave NULL - SAP assigns or derives from the PO,17888
+OPDN_Header,ReceiptNum,SYSTEM,leave NULL - SAP assigns or derives from the PO,NULL
+OPDN_Header,GroupNum,SYSTEM,leave NULL - SAP assigns or derives from the PO,2
+OPDN_Header,DocTime,SYSTEM,leave NULL - SAP assigns or derives from the PO,1603
+OPDN_Header,SlpCode,CONST,-1,-1
+OPDN_Header,TrnspCode,CONST,1,1
+OPDN_Header,PartSupply,CONST,Y,Y
+OPDN_Header,Confirmed,CONST,Y,Y
+OPDN_Header,GrossBase,CONST,-1,-1
+OPDN_Header,ImportEnt,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+OPDN_Header,CreateTran,CONST,N,N
+OPDN_Header,SummryType,CONST,N,N
+OPDN_Header,UpdInvnt,CONST,I,I
+OPDN_Header,UpdCardBal,CONST,N,N
+OPDN_Header,Instance,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+OPDN_Header,Flags,CONST,0,0
+OPDN_Header,InvntDirec,CONST,E,E
+OPDN_Header,CntctCode,SYSTEM,leave NULL - SAP assigns or derives from the PO,28
+OPDN_Header,ShowSCN,CONST,N,N
+OPDN_Header,FatherCard,NULL,NULL,NULL
+OPDN_Header,SysRate,CONST,1,1
+OPDN_Header,CurSource,CONST,L,L
+OPDN_Header,VatSumSy,CONST,0,0
+OPDN_Header,DiscSumSy,CONST,0,0
+OPDN_Header,DocTotalSy,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+OPDN_Header,PaidSys,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+OPDN_Header,FatherType,CONST,P,P
+OPDN_Header,GrosProfSy,NULL,NULL,NULL
+OPDN_Header,UpdateDate,SYSTEM,leave NULL - SAP assigns or derives from the PO,2012-11-05 00:00:00
+OPDN_Header,IsICT,CONST,N,N
+OPDN_Header,CreateDate,SYSTEM,leave NULL - SAP assigns or derives from the PO,2011-12-27 00:00:00
+OPDN_Header,Volume,SOURCE,= U_CubeMeters,0
+OPDN_Header,VolUnit,CONST,4,4
+OPDN_Header,Weight,SOURCE,= U_GrossWeight,0
+OPDN_Header,WeightUnit,CONST,3,3
+OPDN_Header,Series,SYSTEM,leave NULL - SAP assigns or derives from the PO,8
+OPDN_Header,TaxDate,SOURCE,= DocDate,2011-12-27 00:00:00
+OPDN_Header,Filler,NULL,NULL,NULL
+OPDN_Header,DataSource,CONST,I,I
+OPDN_Header,StampNum,NULL,NULL,NULL
+OPDN_Header,isCrin,CONST,N,N
+OPDN_Header,FinncPriod,SYSTEM,leave NULL - SAP assigns or derives from the PO,25
+OPDN_Header,UserSign,SYSTEM,leave NULL - SAP assigns or derives from the PO,25
+OPDN_Header,selfInv,CONST,N,N
+OPDN_Header,VatPaid,CONST,0,0
+OPDN_Header,VatPaidFC,CONST,0,0
+OPDN_Header,VatPaidSys,CONST,0,0
+OPDN_Header,UserSign2,SYSTEM,leave NULL - SAP assigns or derives from the PO,28
+OPDN_Header,WddStatus,CONST,-,-
+OPDN_Header,draftKey,NULL,NULL,NULL
+OPDN_Header,TotalExpns,CONST,0,0
+OPDN_Header,TotalExpFC,CONST,0,0
+OPDN_Header,TotalExpSC,CONST,0,0
+OPDN_Header,DunnLevel,NULL,NULL,NULL
+OPDN_Header,Address2,SOURCE,Inv: Consignee block,7007 College Blvd Suite 700 Overland Park KS  66211 USA
+OPDN_Header,LogInstanc,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+OPDN_Header,Exported,CONST,N,N
+OPDN_Header,StationID,SYSTEM,leave NULL - SAP assigns or derives from the PO,758
+OPDN_Header,Indicator,NULL,NULL,NULL
+OPDN_Header,NetProc,CONST,N,N
+OPDN_Header,AqcsTax,CONST,0,0
+OPDN_Header,AqcsTaxFC,CONST,0,0
+OPDN_Header,AqcsTaxSC,CONST,0,0
+OPDN_Header,CashDiscPr,CONST,0,0
+OPDN_Header,CashDiscnt,CONST,0,0
+OPDN_Header,CashDiscFC,CONST,0,0
+OPDN_Header,CashDiscSC,CONST,0,0
+OPDN_Header,ShipToCode,NULL,NULL,NULL
+OPDN_Header,LicTradNum,NULL,NULL,NULL
+OPDN_Header,PaymentRef,NULL,NULL,NULL
+OPDN_Header,WTSum,CONST,0,0
+OPDN_Header,WTSumFC,CONST,0,0
+OPDN_Header,WTSumSC,CONST,0,0
+OPDN_Header,RoundDif,CONST,0,0
+OPDN_Header,RoundDifFC,CONST,0,0
+OPDN_Header,RoundDifSy,CONST,0,0
+OPDN_Header,CheckDigit,NULL,NULL,NULL
+OPDN_Header,Form1099,NULL,NULL,NULL
+OPDN_Header,Box1099,NULL,NULL,NULL
+OPDN_Header,submitted,CONST,N,N
+OPDN_Header,PoPrss,CONST,N,N
+OPDN_Header,Rounding,CONST,N,N
+OPDN_Header,RevisionPo,CONST,N,N
+OPDN_Header,Segment,CONST,0,0
+OPDN_Header,ReqDate,NULL,NULL,NULL
+OPDN_Header,CancelDate,NULL,NULL,NULL
+OPDN_Header,PickStatus,CONST,N,N
+OPDN_Header,Pick,CONST,N,N
+OPDN_Header,BlockDunn,CONST,N,N
+OPDN_Header,PeyMethod,SYSTEM,leave NULL - SAP assigns or derives from the PO,Wire Transfer
+OPDN_Header,PayBlock,CONST,N,N
+OPDN_Header,PayBlckRef,NULL,NULL,NULL
+OPDN_Header,MaxDscn,CONST,N,N
+OPDN_Header,Reserve,CONST,N,N
+OPDN_Header,Max1099,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+OPDN_Header,CntrlBnk,NULL,NULL,NULL
+OPDN_Header,PickRmrk,NULL,NULL,
+OPDN_Header,ISRCodLine,NULL,NULL,NULL
+OPDN_Header,ExpAppl,CONST,0,0
+OPDN_Header,ExpApplFC,CONST,0,0
+OPDN_Header,ExpApplSC,CONST,0,0
+OPDN_Header,Project,NULL,NULL,NULL
+OPDN_Header,DeferrTax,CONST,N,N
+OPDN_Header,LetterNum,NULL,NULL,NULL
+OPDN_Header,FromDate,NULL,NULL,NULL
+OPDN_Header,ToDate,NULL,NULL,NULL
+OPDN_Header,WTApplied,CONST,0,0
+OPDN_Header,WTAppliedF,CONST,0,0
+OPDN_Header,BoeReserev,CONST,N,N
+OPDN_Header,AgentCode,NULL,NULL,NULL
+OPDN_Header,WTAppliedS,CONST,0,0
+OPDN_Header,EquVatSum,CONST,0,0
+OPDN_Header,EquVatSumF,CONST,0,0
+OPDN_Header,EquVatSumS,CONST,0,0
+OPDN_Header,Installmnt,CONST,1,1
+OPDN_Header,VATFirst,CONST,N,N
+OPDN_Header,NnSbAmnt,CONST,0,0
+OPDN_Header,NnSbAmntSC,CONST,0,0
+OPDN_Header,NbSbAmntFC,CONST,0,0
+OPDN_Header,ExepAmnt,CONST,0,0
+OPDN_Header,ExepAmntSC,CONST,0,0
+OPDN_Header,ExepAmntFC,CONST,0,0
+OPDN_Header,VatDate,NULL,NULL,NULL
+OPDN_Header,CorrExt,NULL,NULL,NULL
+OPDN_Header,CorrInv,NULL,NULL,NULL
+OPDN_Header,NCorrInv,NULL,NULL,NULL
+OPDN_Header,CEECFlag,CONST,N,N
+OPDN_Header,BaseAmnt,CONST,0,0
+OPDN_Header,BaseAmntSC,CONST,0,0
+OPDN_Header,BaseAmntFC,CONST,0,0
+OPDN_Header,CtlAccount,SYSTEM,leave NULL - SAP assigns or derives from the PO,_SYS00000000081
+OPDN_Header,BPLId,NULL,NULL,NULL
+OPDN_Header,BPLName,NULL,NULL,NULL
+OPDN_Header,VATRegNum,NULL,NULL,NULL
+OPDN_Header,TxInvRptNo,NULL,NULL,NULL
+OPDN_Header,TxInvRptDt,NULL,NULL,NULL
+OPDN_Header,KVVATCode,NULL,NULL,NULL
+OPDN_Header,WTDetails,NULL,NULL,NULL
+OPDN_Header,SumAbsId,SYSTEM,leave NULL - SAP assigns or derives from the PO,-1
+OPDN_Header,SumRptDate,NULL,NULL,NULL
+OPDN_Header,PIndicator,CONST,Default,Default
+OPDN_Header,ManualNum,NULL,NULL,NULL
+OPDN_Header,UseShpdGd,CONST,N,N
+OPDN_Header,BaseVtAt,CONST,0,0
+OPDN_Header,BaseVtAtSC,CONST,0,0
+OPDN_Header,BaseVtAtFC,CONST,0,0
+OPDN_Header,NnSbVAt,CONST,0,0
+OPDN_Header,NnSbVAtSC,CONST,0,0
+OPDN_Header,NbSbVAtFC,CONST,0,0
+OPDN_Header,ExptVAt,CONST,0,0
+OPDN_Header,ExptVAtSC,CONST,0,0
+OPDN_Header,ExptVAtFC,CONST,0,0
+OPDN_Header,LYPmtAt,CONST,0,0
+OPDN_Header,LYPmtAtSC,CONST,0,0
+OPDN_Header,LYPmtAtFC,CONST,0,0
+OPDN_Header,ExpAnSum,CONST,0,0
+OPDN_Header,ExpAnSys,CONST,0,0
+OPDN_Header,ExpAnFrgn,CONST,0,0
+OPDN_Header,DocSubType,CONST,--,--
+OPDN_Header,DpmStatus,CONST,O,O
+OPDN_Header,DpmAmnt,CONST,0,0
+OPDN_Header,DpmAmntSC,CONST,0,0
+OPDN_Header,DpmAmntFC,CONST,0,0
+OPDN_Header,DpmDrawn,CONST,N,N
+OPDN_Header,DpmPrcnt,CONST,0,0
+OPDN_Header,PaidSum,CONST,0,0
+OPDN_Header,PaidSumFc,CONST,0,0
+OPDN_Header,PaidSumSc,CONST,0,0
+OPDN_Header,FolioPref,NULL,NULL,NULL
+OPDN_Header,FolioNum,NULL,NULL,NULL
+OPDN_Header,DpmAppl,CONST,0,0
+OPDN_Header,DpmApplFc,CONST,0,0
+OPDN_Header,DpmApplSc,CONST,0,0
+OPDN_Header,LPgFolioN,NULL,NULL,NULL
+OPDN_Header,Header,NULL,NULL,NULL
+OPDN_Header,Footer,NULL,NULL,NULL
+OPDN_Header,Posted,CONST,N,Y
+OPDN_Header,OwnerCode,SYSTEM,leave NULL - SAP assigns or derives from the PO,18
+OPDN_Header,BPChCode,NULL,NULL,NULL
+OPDN_Header,BPChCntc,NULL,NULL,NULL
+OPDN_Header,PayToCode,SYSTEM,leave NULL - SAP assigns or derives from the PO,United Crown International
+OPDN_Header,IsPaytoBnk,CONST,N,N
+OPDN_Header,BnkCntry,NULL,NULL,NULL
+OPDN_Header,BankCode,NULL,NULL,NULL
+OPDN_Header,BnkAccount,NULL,NULL,NULL
+OPDN_Header,BnkBranch,NULL,NULL,NULL
+OPDN_Header,isIns,CONST,N,N
+OPDN_Header,TrackNo,NULL,NULL,NULL
+OPDN_Header,VersionNum,SYSTEM,leave NULL - SAP assigns or derives from the PO,08.80.238.20
+OPDN_Header,LangCode,CONST,3,3
+OPDN_Header,BPNameOW,CONST,N,N
+OPDN_Header,BillToOW,CONST,N,N
+OPDN_Header,ShipToOW,CONST,N,N
+OPDN_Header,RetInvoice,CONST,N,N
+OPDN_Header,ClsDate,NULL,NULL,NULL
+OPDN_Header,MInvNum,NULL,NULL,NULL
+OPDN_Header,MInvDate,NULL,NULL,NULL
+OPDN_Header,SeqCode,NULL,NULL,NULL
+OPDN_Header,Serial,NULL,NULL,NULL
+OPDN_Header,SeriesStr,NULL,NULL,NULL
+OPDN_Header,SubStr,NULL,NULL,NULL
+OPDN_Header,Model,CONST,0,0
+OPDN_Header,TaxOnExp,CONST,0,0
+OPDN_Header,TaxOnExpFc,CONST,0,0
+OPDN_Header,TaxOnExpSc,CONST,0,0
+OPDN_Header,TaxOnExAp,CONST,0,0
+OPDN_Header,TaxOnExApF,CONST,0,0
+OPDN_Header,TaxOnExApS,CONST,0,0
+OPDN_Header,LastPmnTyp,NULL,NULL,NULL
+OPDN_Header,LndCstNum,SYSTEM,leave NULL - SAP assigns or derives from the PO,1
+OPDN_Header,UseCorrVat,CONST,N,N
+OPDN_Header,BlkCredMmo,CONST,N,N
+OPDN_Header,OpenForLaC,CONST,N,N
+OPDN_Header,Excised,CONST,O,O
+OPDN_Header,ExcRefDate,NULL,NULL,NULL
+OPDN_Header,ExcRmvTime,NULL,NULL,NULL
+OPDN_Header,SrvGpPrcnt,CONST,0,0
+OPDN_Header,DepositNum,NULL,NULL,NULL
+OPDN_Header,CertNum,NULL,NULL,NULL
+OPDN_Header,DutyStatus,CONST,Y,Y
+OPDN_Header,AutoCrtFlw,CONST,N,N
+OPDN_Header,FlwRefDate,NULL,NULL,NULL
+OPDN_Header,FlwRefNum,NULL,NULL,NULL
+OPDN_Header,VatJENum,SYSTEM,leave NULL - SAP assigns or derives from the PO,-1
+OPDN_Header,DpmVat,CONST,0,0
+OPDN_Header,DpmVatFc,CONST,0,0
+OPDN_Header,DpmVatSc,CONST,0,0
+OPDN_Header,DpmAppVat,CONST,0,0
+OPDN_Header,DpmAppVatF,CONST,0,0
+OPDN_Header,DpmAppVatS,CONST,0,0
+OPDN_Header,InsurOp347,CONST,N,N
+OPDN_Header,IgnRelDoc,CONST,N,N
+OPDN_Header,BuildDesc,NULL,NULL,
+OPDN_Header,ResidenNum,CONST,1,1
+OPDN_Header,Checker,NULL,NULL,NULL
+OPDN_Header,Payee,NULL,NULL,NULL
+OPDN_Header,CopyNumber,CONST,0,0
+OPDN_Header,SSIExmpt,NULL,NULL,NULL
+OPDN_Header,PQTGrpSer,NULL,NULL,NULL
+OPDN_Header,PQTGrpNum,NULL,NULL,NULL
+OPDN_Header,PQTGrpHW,CONST,N,N
+OPDN_Header,ReopOriDoc,NULL,NULL,NULL
+OPDN_Header,ReopManCls,NULL,NULL,NULL
+OPDN_Header,DocManClsd,CONST,U,U
+OPDN_Header,ClosingOpt,CONST,1,1
+OPDN_Header,SpecDate,NULL,NULL,NULL
+OPDN_Header,Ordered,CONST,N,N
+OPDN_Header,NTSApprov,CONST,N,N
+OPDN_Header,NTSWebSite,NULL,NULL,NULL
+OPDN_Header,NTSeTaxNo,NULL,NULL,NULL
+OPDN_Header,NTSApprNo,NULL,NULL,NULL
+OPDN_Header,PayDuMonth,CONST,N,N
+OPDN_Header,ExtraMonth,CONST,0,0
+OPDN_Header,ExtraDays,CONST,30,30
+OPDN_Header,CdcOffset,CONST,0,0
+OPDN_Header,SignMsg,NULL,NULL,NULL
+OPDN_Header,SignDigest,NULL,NULL,NULL
+OPDN_Header,CertifNum,NULL,NULL,NULL
+OPDN_Header,KeyVersion,NULL,NULL,NULL
+OPDN_Header,EDocGenTyp,CONST,N,N
+OPDN_Header,ESeries,NULL,NULL,NULL
+OPDN_Header,EDocNum,NULL,NULL,NULL
+OPDN_Header,EDocExpFrm,NULL,NULL,NULL
+OPDN_Header,OnlineQuo,CONST,N,N
+OPDN_Header,POSEqNum,NULL,NULL,NULL
+OPDN_Header,POSManufSN,NULL,NULL,NULL
+OPDN_Header,POSCashN,NULL,NULL,NULL
+OPDN_Header,EDocStatus,CONST,C,C
+OPDN_Header,EDocCntnt,NULL,NULL,NULL
+OPDN_Header,EDocProces,CONST,C,C
+OPDN_Header,EDocErrCod,NULL,NULL,NULL
+OPDN_Header,EDocErrMsg,NULL,NULL,NULL
+OPDN_Header,EDocCancel,CONST,N,N
+OPDN_Header,EDocTest,CONST,N,N
+OPDN_Header,EDocPrefix,NULL,NULL,NULL
+OPDN_Header,CUP,NULL,NULL,NULL
+OPDN_Header,CIG,NULL,NULL,NULL
+OPDN_Header,DpmAsDscnt,CONST,N,N
+OPDN_Header,Attachment,NULL,NULL,NULL
+OPDN_Header,AtcEntry,NULL,NULL,NULL
+OPDN_Header,SupplCode,NULL,NULL,NULL
+OPDN_Header,GTSRlvnt,CONST,N,N
+OPDN_Header,BaseDisc,NULL,NULL,NULL
+OPDN_Header,BaseDiscSc,NULL,NULL,NULL
+OPDN_Header,BaseDiscFc,NULL,NULL,NULL
+OPDN_Header,BaseDiscPr,NULL,NULL,NULL
+OPDN_Header,CreateTS,SYSTEM,leave NULL - SAP assigns or derives from the PO,160300
+OPDN_Header,UpdateTS,SYSTEM,leave NULL - SAP assigns or derives from the PO,160300
+OPDN_Header,SrvTaxRule,CONST,N,N
+OPDN_Header,AnnInvDecR,NULL,NULL,NULL
+OPDN_Header,Supplier,NULL,NULL,NULL
+OPDN_Header,Releaser,NULL,NULL,NULL
+OPDN_Header,Receiver,NULL,NULL,NULL
+OPDN_Header,ToWhsCode,NULL,NULL,NULL
+OPDN_Header,AssetDate,NULL,NULL,NULL
+OPDN_Header,Requester,NULL,NULL,NULL
+OPDN_Header,ReqName,NULL,NULL,NULL
+OPDN_Header,Branch,NULL,NULL,NULL
+OPDN_Header,Department,NULL,NULL,NULL
+OPDN_Header,Email,NULL,NULL,NULL
+OPDN_Header,Notify,NULL,NULL,NULL
+OPDN_Header,ReqType,SYSTEM,leave NULL - SAP assigns or derives from the PO,12
+OPDN_Header,OriginType,CONST,M,M
+OPDN_Header,IsReuseNum,CONST,N,N
+OPDN_Header,IsReuseNFN,CONST,N,N
+OPDN_Header,DocDlvry,CONST,0,0
+OPDN_Header,PaidDpm,NULL,NULL,NULL
+OPDN_Header,PaidDpmF,NULL,NULL,NULL
+OPDN_Header,PaidDpmS,NULL,NULL,NULL
+OPDN_Header,EnvTypeNFe,CONST,-1,-1
+OPDN_Header,AgrNo,NULL,NULL,NULL
+OPDN_Header,IsAlt,CONST,N,N
+OPDN_Header,AltBaseTyp,CONST,-1,-1
+OPDN_Header,AltBaseEnt,NULL,NULL,NULL
+OPDN_Header,AuthCode,NULL,NULL,NULL
+OPDN_Header,StDlvDate,NULL,NULL,NULL
+OPDN_Header,StDlvTime,NULL,NULL,NULL
+OPDN_Header,EndDlvDate,NULL,NULL,NULL
+OPDN_Header,EndDlvTime,NULL,NULL,NULL
+OPDN_Header,VclPlate,NULL,NULL,NULL
+OPDN_Header,ElCoStatus,NULL,NULL,NULL
+OPDN_Header,AtDocType,NULL,NULL,NULL
+OPDN_Header,ElCoMsg,NULL,NULL,NULL
+OPDN_Header,PrintSEPA,CONST,N,N
+OPDN_Header,FreeChrg,NULL,NULL,NULL
+OPDN_Header,FreeChrgFC,NULL,NULL,NULL
+OPDN_Header,FreeChrgSC,NULL,NULL,NULL
+OPDN_Header,NfeValue,NULL,NULL,NULL
+OPDN_Header,FiscDocNum,NULL,NULL,NULL
+OPDN_Header,RelatedTyp,CONST,-1,-1
+OPDN_Header,RelatedEnt,NULL,NULL,NULL
+OPDN_Header,CCDEntry,NULL,NULL,NULL
+OPDN_Header,NfePrntFo,NULL,NULL,NULL
+OPDN_Header,ZrdAbs,NULL,NULL,NULL
+OPDN_Header,POSRcptNo,NULL,NULL,NULL
+OPDN_Header,FoCTax,NULL,NULL,NULL
+OPDN_Header,FoCTaxFC,NULL,NULL,NULL
+OPDN_Header,FoCTaxSC,NULL,NULL,NULL
+OPDN_Header,TpCusPres,NULL,NULL,NULL
+OPDN_Header,ExcDocDate,NULL,NULL,NULL
+OPDN_Header,FoCFrght,NULL,NULL,NULL
+OPDN_Header,FoCFrghtFC,NULL,NULL,NULL
+OPDN_Header,FoCFrghtSC,NULL,NULL,NULL
+OPDN_Header,InterimTyp,CONST,0,0
+OPDN_Header,PTICode,NULL,NULL,NULL
+OPDN_Header,Letter,NULL,NULL,NULL
+OPDN_Header,FolNumFrom,NULL,NULL,NULL
+OPDN_Header,FolNumTo,NULL,NULL,NULL
+OPDN_Header,FolSeries,NULL,NULL,NULL
+OPDN_Header,SplitTax,NULL,NULL,NULL
+OPDN_Header,SplitTaxFC,NULL,NULL,NULL
+OPDN_Header,SplitTaxSC,NULL,NULL,NULL
+OPDN_Header,ToBinCode,NULL,NULL,NULL
+OPDN_Header,PriceMode,NULL,NULL,NULL
+OPDN_Header,PoDropPrss,CONST,N,N
+OPDN_Header,PermitNo,NULL,NULL,NULL
+OPDN_Header,MYFtype,NULL,NULL,NULL
+OPDN_Header,DocTaxID,NULL,NULL,NULL
+OPDN_Header,DateReport,NULL,NULL,NULL
+OPDN_Header,RepSection,NULL,NULL,NULL
+OPDN_Header,ExclTaxRep,CONST,N,N
+OPDN_Header,PosCashReg,NULL,NULL,NULL
+OPDN_Header,DmpTransID,NULL,NULL,NULL
+OPDN_Header,ECommerBP,NULL,NULL,NULL
+OPDN_Header,EComerGSTN,NULL,NULL,NULL
+OPDN_Header,Revision,CONST,N,N
+OPDN_Header,RevRefNo,NULL,NULL,NULL
+OPDN_Header,RevRefDate,NULL,NULL,NULL
+OPDN_Header,RevCreRefN,NULL,NULL,NULL
+OPDN_Header,RevCreRefD,NULL,NULL,NULL
+OPDN_Header,TaxInvNo,NULL,NULL,NULL
+OPDN_Header,FrmBpDate,NULL,NULL,NULL
+OPDN_Header,GSTTranTyp,NULL,NULL,NULL
+OPDN_Header,BaseType,CONST,-1,-1
+OPDN_Header,BaseEntry,NULL,NULL,NULL
+OPDN_Header,ComTrade,CONST,E,E
+OPDN_Header,UseBilAddr,NULL,NULL,NULL
+OPDN_Header,IssReason,CONST,1,1
+OPDN_Header,ComTradeRt,CONST,N,N
+OPDN_Header,SplitPmnt,CONST,N,N
+OPDN_Header,SOIWizId,NULL,NULL,NULL
+OPDN_Header,SelfPosted,CONST,N,N
+OPDN_Header,EnBnkAcct,NULL,NULL,NULL
+OPDN_Header,EncryptIV,NULL,NULL,NULL
+OPDN_Header,DPPStatus,CONST,N,N
+OPDN_Header,SAPPassprt,NULL,NULL,NULL
+OPDN_Header,EWBGenType,NULL,NULL,NULL
+OPDN_Header,CtActTax,NULL,NULL,NULL
+OPDN_Header,CtActTaxFC,NULL,NULL,NULL
+OPDN_Header,CtActTaxSC,NULL,NULL,NULL
+OPDN_Header,EDocType,CONST,F,F
+OPDN_Header,QRCodeSrc,NULL,NULL,NULL
+OPDN_Header,AggregDoc,CONST,N,N
+OPDN_Header,DataVers,CONST,1,1
+OPDN_Header,ShipState,NULL,NULL,NULL
+OPDN_Header,ShipPlace,NULL,NULL,NULL
+OPDN_Header,CustOffice,NULL,NULL,NULL
+OPDN_Header,FCI,NULL,NULL,NULL
+OPDN_Header,NnSbCuAmnt,NULL,NULL,NULL
+OPDN_Header,NnSbCuSC,NULL,NULL,NULL
+OPDN_Header,NnSbCuFC,NULL,NULL,NULL
+OPDN_Header,ExepCuAmnt,NULL,NULL,NULL
+OPDN_Header,ExepCuSC,NULL,NULL,NULL
+OPDN_Header,ExepCuFC,NULL,NULL,NULL
+OPDN_Header,AddLegIn,NULL,NULL,NULL
+OPDN_Header,LegTextF,NULL,NULL,NULL
+OPDN_Header,IndFinal,CONST,N,N
+OPDN_Header,DANFELgTxt,NULL,NULL,NULL
+OPDN_Header,PostPmntWT,CONST,N,N
+OPDN_Header,QRCodeSPGn,NULL,NULL,NULL
+OPDN_Header,FCEPmnMean,CONST,N,N
+OPDN_Header,ReqCode,NULL,NULL,NULL
+OPDN_Header,NotRel4MI,CONST,N,N
+OPDN_Header,Rel4PPTax,CONST,N,N
+OPDN_Header,ConfrmedBy,NULL,NULL,NULL
+OPDN_Header,ConfrmedOn,NULL,NULL,NULL
+OPDN_Header,ReqID,NULL,NULL,NULL
+OPDN_Header,NonDdAmt,NULL,NULL,NULL
+OPDN_Header,NonDdAmtSC,NULL,NULL,NULL
+OPDN_Header,NonDdAmtFC,NULL,NULL,NULL
+OPDN_Header,BookeTdsBP,CONST,N,N
+OPDN_Header,AllocNum,NULL,NULL,NULL
+OPDN_Header,DPayToAddr,NULL,NULL,NULL
+OPDN_Header,DigPayment,CONST,N,N
+OPDN_Header,OperProfit,NULL,NULL,NULL
+OPDN_Header,OperProfFC,NULL,NULL,NULL
+OPDN_Header,OperProfSy,NULL,NULL,NULL
+OPDN_Header,NetIncome,NULL,NULL,NULL
+OPDN_Header,NetIncomFC,NULL,NULL,NULL
+OPDN_Header,NetIncomSy,NULL,NULL,NULL
+OPDN_Header,PDueMonEnd,CONST,N,N
+OPDN_Header,RShipToCod,NULL,NULL,NULL
+OPDN_Header,Address3,NULL,NULL,NULL
+OPDN_Header,RShipToOW,CONST,N,N
+OPDN_Header,EnLicTradN,NULL,NULL,NULL
+OPDN_Header,ListNum,CONST,1,1
+OPDN_Header,AplTaxOnFr,CONST,N,N
+OPDN_Header,DocEmail,NULL,NULL,NULL
+OPDN_Header,SirenNo,NULL,NULL,NULL
+OPDN_Header,SiretNo,NULL,NULL,NULL
+OPDN_Header,CpyDtyStts,CONST,N,N
+OPDN_Header,RoutingCod,NULL,NULL,NULL
+OPDN_Header,DpmSpAmnt,NULL,NULL,NULL
+OPDN_Header,DpmSpAmtSC,NULL,NULL,NULL
+OPDN_Header,DpmSpAmtFC,NULL,NULL,NULL
+OPDN_Header,CmDpmPrcnt,NULL,NULL,NULL
+OPDN_Header,Suffix,NULL,NULL,NULL
+OPDN_Header,U_OrderNo,SOURCE,Pac: PO# digits (6),115671
+OPDN_Header,U_BrokerRef,SYSTEM,leave NULL - SAP assigns or derives from the PO,BMOU4263861
+OPDN_Header,U_AWB,NULL,NULL,NULL
+OPDN_Header,U_NBS_R1Printed,CONST,N,N
+OPDN_Header,U_NBS_RMANum,NULL,NULL,NULL
+OPDN_Header,U_RD1_RecInv,NULL,NULL,NULL
+OPDN_Header,U_RD1_Sch,NULL,NULL,NULL
+OPDN_Header,U_NBS_Recurring,CONST,N,N
+OPDN_Header,U_NBS_Defer,CONST,N,N
+OPDN_Header,U_NBS_FreeShip,CONST,0,0
+OPDN_Header,U_NBS_CmpDisc,NULL,NULL,NULL
+OPDN_Header,U_NBS_CmpgnCode,NULL,NULL,NULL
+OPDN_Header,U_NBS_CmpStDte,NULL,NULL,NULL
+OPDN_Header,U_NBS_CmpEdDte,NULL,NULL,NULL
+OPDN_Header,U_NBS_CmpDiscAmt,CONST,0,0
+OPDN_Header,U_NBS_CmpFreeShip,CONST,N,N
+OPDN_Header,U_NBS_ShipAmt,CONST,0,0
+OPDN_Header,U_ActManuf,SYSTEM,leave NULL - SAP assigns or derives from the PO,VM00026
+OPDN_Header,U_Agent,NULL,NULL,NULL
+OPDN_Header,U_OrigShipDt,SYSTEM,leave NULL - SAP assigns or derives from the PO,2011-12-05 00:00:00
+OPDN_Header,U_Notify,SYSTEM,leave NULL - SAP assigns or derives from the PO,"MARISOL INTERNATIONAL., LLC"
+OPDN_Header,U_Signed,NULL,NULL,NULL
+OPDN_Header,U_RemoveHTSUS,CONST,N,N
+OPDN_Header,U_FOB,SOURCE,Inv: Port of Shipment,"Yantian, China"
+OPDN_Header,U_OceanDest,SOURCE,"Inv: Port of Discharge -> 'Kansas City, KS'","Kansas Ciy, KS"
+OPDN_Header,U_BLConsig,SOURCE,"'Design Resources, Inc.'","Design Resources, Inc."
+OPDN_Header,U_GenConsig,SOURCE,"'Design Resources, Inc.'","Design Resources, Inc."
+OPDN_Header,U_Change,NULL,NULL,NULL
+OPDN_Header,U_ChangeCode,NULL,NULL,NULL
+OPDN_Header,U_FactoryInv,SOURCE,Inv: Invoice No.,INB11122580
+OPDN_Header,U_NumCartons,SOURCE,sum Pac: CTN for this PO,NULL
+OPDN_Header,U_BrokerInvNo,NULL,NULL,NULL
+OPDN_Header,U_ContREfNo,SYSTEM,leave NULL - SAP assigns or derives from the PO,BMOU4263861
+OPDN_Header,U_SealRefNo,NULL,NULL,NULL
+OPDN_Header,U_BOLNo,NULL,NULL,NULL
+OPDN_Header,U_CubeMeters,SOURCE,sum Pac: CBM for this PO,0
+OPDN_Header,U_GrossWeight,SOURCE,sum Pac: Total G.W for this PO,0
+OPDN_Header,U_DimWeight,CONST,0,0
+OPDN_Header,U_CustEntryNo,NULL,NULL,NULL
+OPDN_Header,U_CustEntryDt,NULL,NULL,NULL
+OPDN_Header,U_CustClearDt,NULL,NULL,NULL
+OPDN_Header,U_ShipInst,NULL,NULL,NULL
+OPDN_Header,U_CustComm,NULL,NULL,NULL
+OPDN_Header,U_POPrefix,SOURCE,Pac: PO# first 3 chars,ABM
+OPDN_Header,U_Prepared,NULL,NULL,NULL
+OPDN_Header,U_MakerTerms,CONST,CDN,CDN
+OPDN_Header,U_OrigDelivery,NULL,NULL,NULL
+OPDN_Header,U_RevDelivery,NULL,NULL,NULL
+OPDN_Header,U_FOBRebate,NULL,NULL,NULL
+OPDN_Header,U_AgentComm,CONST,0,0
+OPDN_Header,U_POType,NULL,NULL,
+OPDN_Header,U_Event,CONST,No,No
+OPDN_Header,U_EventDt,NULL,NULL,NULL
+OPDN_Header,U_Confirmed,CONST,No,No
+OPDN_Header,U_SONo,SYSTEM,leave NULL - SAP assigns or derives from the PO,3
+OPDN_Header,U_COO,SOURCE,country of shipper ('BD' for Bangladesh),CN
+OPDN_Header,U_ScannedOrder,NULL,NULL,NULL
+OPDN_Header,U_BulkFabApp,NULL,NULL,NULL
+OPDN_Header,U_BulkTrimApp,NULL,NULL,NULL
+OPDN_Header,U_BulkTestReport,NULL,NULL,NULL
+OPDN_Header,U_PPSmpApp,NULL,NULL,NULL
+OPDN_Header,U_DRIWashTest,NULL,NULL,NULL
+OPDN_Header,U_BulkCut,NULL,NULL,NULL
+OPDN_Header,U_BulkSew,NULL,NULL,NULL
+OPDN_Header,U_BulkEmbPrint,NULL,NULL,NULL
+OPDN_Header,U_BulkWash,NULL,NULL,NULL
+OPDN_Header,U_BulkFinPack,NULL,NULL,NULL
+OPDN_Header,U_TopSmpApp,NULL,NULL,NULL
+OPDN_Header,U_QCReport,NULL,NULL,NULL
+OPDN_Header,U_CustRefNo,SOURCE,Pac: PO# token after the number,36292
+OPDN_Header,U_UltDelivery,NULL,NULL,NULL
+OPDN_Header,U_ShipVia,NULL,NULL,NULL
+OPDN_Header,U_ProdReady,NULL,NULL,NULL
+OPDN_Header,U_Tracking,NULL,NULL,NULL
+OPDN_Header,U_SecCustomer,NULL,NULL,NULL
+OPDN_Header,U_ActShipDt,SYSTEM,leave NULL - SAP assigns or derives from the PO,2011-12-12 00:00:00
+OPDN_Header,U_ImpSchComm,NULL,NULL,NULL
+OPDN_Header,U_HldWarehouse,NULL,NULL,NULL
+OPDN_Header,U_AffiliateNo,NULL,NULL,NULL
+OPDN_Header,U_CostSheet,NULL,NULL,NULL
+OPDN_Header,U_CreditCode,NULL,NULL,NULL
+OPDN_Header,U_CreditAuth,NULL,NULL,NULL
+OPDN_Header,U_MOT,SOURCE,Inv: Shipped (Sea),NULL
+OPDN_Header,U_CreditReason,NULL,NULL,NULL
+OPDN_Header,U_DefPO,NULL,NULL,NULL
+OPDN_Header,U_InStock,NULL,NULL,NULL
+OPDN_Header,U_OceanPdDt,NULL,NULL,NULL
+OPDN_Header,U_SOAComm,NULL,NULL,NULL
+OPDN_Header,U_PRX_Tkno,NULL,NULL,NULL
+OPDN_Header,U_rbMnfsts,NULL,NULL,NULL
+OPDN_Header,U_rbCrtns,NULL,NULL,NULL
+OPDN_Header,U_A1WMS_ADJ,CONST,0,0
+OPDN_Header,U_A1WMS_RMASEQ,NULL,NULL,NULL
+OPDN_Header,U_A1WMS_OShipPayType,CONST,0,0
+OPDN_Header,U_A1WMS_OShipPayAcc,NULL,NULL,NULL
+OPDN_Header,U_ISF,NULL,NULL,NULL
+OPDN_Header,U_EDI,NULL,NULL,NULL
+OPDN_Header,U_ExpressCustom,NULL,NULL,NULL
+OPDN_Header,U_RevNum,NULL,NULL,NULL
+OPDN_Header,U_CancelReason,NULL,NULL,NULL
+OPDN_Header,U_ReSONo,NULL,NULL,NULL
+OPDN_Header,U_PRX_SID,NULL,NULL,NULL
+OPDN_Header,U_PRX_SRVR,NULL,NULL,NULL
+OPDN_Header,U_PRX_PAYM,NULL,NULL,NULL
+OPDN_Header,U_rbBO,NULL,NULL,NULL
+OPDN_Header,U_rbDelivery,NULL,NULL,NULL
+OPDN_Header,U_rbLblUse,NULL,NULL,NULL
+OPDN_Header,U_rbOkPoBo,NULL,NULL,NULL
+OPDN_Header,U_rbOkSoBo,NULL,NULL,NULL
+OPDN_Header,U_rbOrdSrc,NULL,NULL,NULL
+OPDN_Header,U_rbPckSlp,NULL,NULL,NULL
+OPDN_Header,U_rbState,NULL,NULL,NULL
+OPDN_Header,U_ReasonExpt,NULL,NULL,NULL
+OPDN_Header,U_TermSale,SOURCE,Pac: TERMS (FOB),NULL
+OPDN_Header,U_FrtFwd,NULL,NULL,NULL
+OPDN_Header,U_POReq,NULL,NULL,NULL
+OPDN_Header,U_SecCustSell,NULL,NULL,NULL
+OPDN_Header,U_Testing,NULL,NULL,NULL
+OPDN_Header,U_TestResults,NULL,NULL,NULL
+OPDN_Header,U_TWBS_CBRef,NULL,NULL,NULL
+OPDN_Header,U_CustPORev,NULL,NULL,NULL
+OPDN_Header,U_CustPOLine,NULL,NULL,NULL
+OPDN_Header,U_CustPOShip,NULL,NULL,NULL
+OPDN_Header,U_ShipExpDate,NULL,NULL,NULL
+OPDN_Header,U_EDIStatus,NULL,NULL,NULL
+OPDN_Header,U_EDIOrdType,NULL,NULL,NULL
+OPDN_Header,U_Release,NULL,NULL,NULL
+OPDN_Header,U_StoreNo,NULL,NULL,NULL
+OPDN_Header,U_WhsCode,NULL,NULL,NULL
+OPDN_Header,U_SendSOA,NULL,NULL,NULL
+OPDN_Header,U_SendSOADate,NULL,NULL,NULL
+OPDN_Header,U_RevShipDt,NULL,NULL,NULL
+OPDN_Header,U_FreightRefNo,NULL,NULL,NULL
+OPDN_Header,U_ImpAuthOnFile,NULL,NULL,NULL
+OPDN_Header,U_ShipNotif,NULL,NULL,NULL
+OPDN_Header,U_ProofHold,NULL,NULL,NULL
+OPDN_Header,U_RecAction,NULL,NULL,NULL
+OPDN_Header,U_ImportAuthKey,NULL,NULL,NULL
+OPDN_Header,U_CustAppDate,NULL,NULL,NULL
+OPDN_Header,U_SpecialTariff,NULL,NULL,NULL
+OPDN_Header,U_PackListRemarks,NULL,NULL,NULL
+OPDN_Header,U_ProdRelDt,NULL,NULL,NULL
+OPDN_Header,U_PackListSent,NULL,NULL,NULL
+OPDN_Header,U_PriorityInd,NULL,NULL,NULL
+OPDN_Header,U_FreightActual,NULL,NULL,NULL
+OPDN_Header,U_BatchID,NULL,NULL,NULL
+OPDN_Header,U_ConsolPO,NULL,NULL,NULL
+OPDN_Header,U_AssignedTo,NULL,NULL,NULL
+OPDN_Header,U_LCDutyActual,NULL,NULL,NULL
+OPDN_Header,U_LCFreightActual,NULL,NULL,NULL
+OPDN_Header,U_WMSDownloadDate,NULL,NULL,NULL
+OPDN_Header,U_WMSStatus,NULL,NULL,NULL
+OPDN_Header,U_WMSOrderSource,NULL,NULL,NULL
+OPDN_Header,U_ArtCollection,NULL,NULL,NULL
+OPDN_Header,U_SentPODate,NULL,NULL,NULL
+OPDN_Header,U_BypassVal,NULL,NULL,NULL
+OPDN_Header,U_PackingMethod,NULL,NULL,NULL
+OPDN_Header,U_HandoverDate,SOURCE,Inv/Pac: ICD DATE (confirm UDF),NULL
+OPDN_Header,U_FirstUSPort,NULL,NULL,NULL
+OPDN_Header,U_FirstUSPortArrivalDate,NULL,NULL,NULL
+OPDN_Header,U_FirstUSPortDepartDate,NULL,NULL,NULL
+OPDN_Header,U_BookingDate,NULL,NULL,NULL
+OPDN_Header,U_TrackComment,NULL,NULL,NULL
+OPDN_Header,U_ActualDelDate,NULL,NULL,NULL
+OPDN_Header,U_FFInvoiceDate,NULL,NULL,NULL
+OPDN_Header,U_RevDeliveryToUse,NULL,NULL,NULL
+OPDN_Header,U_OpsInstructions,NULL,NULL,NULL
+OPDN_Header,U_PackSlipRemarks,NULL,NULL,NULL
+OPDN_Header,U_QuotedDelivery,NULL,NULL,NULL
+OPDN_Header,U_ArrivalDestPort,NULL,NULL,NULL
+OPDN_Header,U_GroundedAtDestPort,NULL,NULL,NULL
+OPDN_Header,U_MovedToYard,NULL,NULL,NULL
+OPDN_Header,U_SchedAvailToDlvr,NULL,NULL,NULL
+OPDN_Header,U_FFComments,NULL,NULL,NULL
+OPDN_Header,U_CustOfferDt,NULL,NULL,NULL
+OPDN_Header,U_ISFNo,NULL,NULL,NULL
+OPDN_Header,U_ISFSubDate,NULL,NULL,NULL
+OPDN_Header,U_ISFAcceptDt,NULL,NULL,NULL
+OPDN_Header,U_TelexDate,NULL,NULL,NULL
+OPDN_Header,U_PODUnloaded,NULL,NULL,NULL
+OPDN_Header,U_AtPortCFS,NULL,NULL,NULL
+OPDN_Header,U_CFSDepart,NULL,NULL,NULL
+OPDN_Header,U_AtLocalCFS,NULL,NULL,NULL
+OPDN_Header,U_TrackLocation,NULL,NULL,NULL
+OPDN_Header,U_TrkLocationDate,NULL,NULL,NULL
+OPDN_Header,U_BlockAutoDelivery,NULL,NULL,NULL
+OPDN_Header,U_AllowFreightForwarderUpdate,SYSTEM,leave NULL - SAP assigns or derives from the PO,Y
+OPDN_Header,U_SewOutApproved,NULL,NULL,NULL
+OPDN_Header,U_Program,NULL,NULL,NULL
+OPDN_Header,U_ETAPortOfArrival,NULL,NULL,NULL
+OPDN_Header,U_SalesforceID,NULL,NULL,NULL
+OPDN_Header,U_SalesforceUpdated,NULL,NULL,NULL
+OPDN_Header,U_UltDeliveryToUse,NULL,NULL,NULL
+OPDN_Header,U_ResendReason,NULL,NULL,NULL
+OPDN_Header,U_TestComments,NULL,NULL,NULL
+OPDN_Header,U_FrtFwdInv,NULL,NULL,NULL
+OPDN_Header,U_ProdStatus,NULL,NULL,NULL
+OPDN_Header,U_DwellTimeReason,NULL,NULL,NULL
+OPDN_Header,U_CancelledReason,NULL,NULL,NULL
+OPDN_Header,U_CancelApproval,NULL,NULL,NULL
+OPDN_Header,U_VesselName,NULL,NULL,NULL
+OPDN_Header,U_MAWBNo,NULL,NULL,NULL
+OPDN_Header,U_WMSBackorder,NULL,NULL,NULL
+OPDN_Header,U_ValidationMessage,NULL,NULL,NULL
+OPDN_Header,U_Status,NULL,NULL,NULL
+OPDN_Header,U_ReOrder,NULL,NULL,NULL
+OPDN_Header,U_OrderException,NULL,NULL,NULL
+OPDN_Header,U_ValidationTime,NULL,NULL,NULL
+OPDN_Header,U_TransshipDate,NULL,NULL,NULL
+OPDN_Header,U_FCAAirport,NULL,NULL,NULL
+OPDN_Header,U_FtyDcReqDt,NULL,NULL,NULL
+OPDN_Header,U_FtyDcRcvdDt,NULL,NULL,NULL
+OPDN_Header,U_MasterBLNo,NULL,NULL,NULL
+OPDN_Header,U_AssistValue,NULL,NULL,NULL
+OPDN_Header,U_Carrier,NULL,NULL,NULL
+OPDN_Header,U_RailETADest,NULL,NULL,NULL
+OPDN_Header,U_CLMComments,NULL,NULL,NULL
+OPDN_Header,U_ProdStatusBlock,NULL,NULL,NULL
+OPDN_Header,U_FirstSaleTotal,NULL,NULL,NULL
+OPDN_Header,U_SPOpercent,NULL,NULL,NULL
+OPDN_Header,U_BCSQTRePrgm,NULL,NULL,NULL
+OPDN_Header,U_SAPDocumentID,NULL,NULL,NULL
+OPDN_Header,U_PackingOverride,NULL,NULL,NULL
+OPDN_Header,U_AddedToProductRegistry,NULL,NULL,NULL
+OPDN_Header,U_EventDateType,NULL,NULL,NULL
+OPDN_Header,U_InitialVesselETA,NULL,NULL,NULL
+OPDN_Header,U_InitialGnosisRailETA,NULL,NULL,NULL
+OPDN_Header,U_AssistValueDomesticMailroom,NULL,NULL,NULL
+OPDN_Header,U_AssistValueFactoryOrigin,NULL,NULL,NULL
+OPDN_Header,U_DivertDecision,NULL,NULL,NULL
+OPDN_Header,U_DivertDecisionETA,NULL,NULL,NULL
+OPDN_Header,U_FtyRvsdDocRcvdDt,NULL,NULL,NULL
+OPDN_Header,U_OutGatetoCFSDt,NULL,NULL,NULL
+OPDN_Header,U_DelayDays,NULL,NULL,NULL
+PDN1_Line,DocEntry,SOURCE,parent OPDN_Header.DocEntry,1
+PDN1_Line,LineNum,SOURCE,0..n within GRPO,0
+PDN1_Line,TargetType,SYSTEM,leave NULL - SAP assigns or derives from the PO,21
+PDN1_Line,TrgetEntry,SYSTEM,leave NULL - SAP assigns or derives from the PO,31
+PDN1_Line,BaseRef,SOURCE,PO number,25
+PDN1_Line,BaseType,SOURCE,22 (Purchase Order),22
+PDN1_Line,BaseEntry,LOOKUP,LOOKUP PO DocEntry,25
+PDN1_Line,BaseLine,LOOKUP,LOOKUP PO line by ItemCode + U_Color,0
+PDN1_Line,LineStatus,CONST,O,C
+PDN1_Line,ItemCode,SOURCE,Pac: STYLE# before '(',C11-4804
+PDN1_Line,Dscription,SOURCE,Pac: DESCRIPTION (or PO line description),NW 3D Cap
+PDN1_Line,Quantity,SOURCE,Pac: Total PCS.,144
+PDN1_Line,ShipDate,SOURCE,= header DocDate,2011-12-27 00:00:00
+PDN1_Line,OpenQty,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,Price,LOOKUP,LOOKUP PO line Price (not on factory docs),1.99
+PDN1_Line,Currency,SOURCE,'$',$
+PDN1_Line,Rate,CONST,0,0
+PDN1_Line,DiscPrcnt,CONST,0,0
+PDN1_Line,LineTotal,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+PDN1_Line,TotalFrgn,CONST,0,0
+PDN1_Line,OpenSum,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+PDN1_Line,OpenSumFC,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,VendorNum,NULL,NULL,
+PDN1_Line,SerialNum,NULL,NULL,NULL
+PDN1_Line,WhsCode,LOOKUP,LOOKUP default receiving warehouse,1
+PDN1_Line,SlpCode,SYSTEM,leave NULL - SAP assigns or derives from the PO,1
+PDN1_Line,Commission,CONST,0,0
+PDN1_Line,TreeType,CONST,N,N
+PDN1_Line,AcctCode,SYSTEM,leave NULL - SAP assigns or derives from the PO,_SYS00000000015
+PDN1_Line,TaxStatus,CONST,N,N
+PDN1_Line,GrossBuyPr,CONST,0,0
+PDN1_Line,PriceBefDi,SYSTEM,leave NULL - SAP assigns or derives from the PO,1.99
+PDN1_Line,DocDate,SYSTEM,leave NULL - SAP assigns or derives from the PO,2011-12-21 00:00:00
+PDN1_Line,Flags,CONST,0,0
+PDN1_Line,OpenCreQty,CONST,0,0
+PDN1_Line,UseBaseUn,CONST,N,N
+PDN1_Line,SubCatNum,NULL,NULL,NULL
+PDN1_Line,BaseCard,SOURCE,= header CardCode,V00132
+PDN1_Line,TotalSumSy,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+PDN1_Line,OpenSumSys,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+PDN1_Line,InvntSttus,CONST,O,C
+PDN1_Line,OcrCode,NULL,NULL,NULL
+PDN1_Line,Project,NULL,NULL,
+PDN1_Line,CodeBars,NULL,NULL,
+PDN1_Line,VatPrcnt,CONST,0,0
+PDN1_Line,VatGroup,NULL,NULL,NULL
+PDN1_Line,PriceAfVAT,SYSTEM,leave NULL - SAP assigns or derives from the PO,1.99
+PDN1_Line,Height1,CONST,0,0
+PDN1_Line,Hght1Unit,NULL,NULL,NULL
+PDN1_Line,Height2,CONST,0,0
+PDN1_Line,Hght2Unit,NULL,NULL,NULL
+PDN1_Line,Width1,CONST,0,0
+PDN1_Line,Wdth1Unit,NULL,NULL,NULL
+PDN1_Line,Width2,CONST,0,0
+PDN1_Line,Wdth2Unit,NULL,NULL,NULL
+PDN1_Line,Length1,CONST,0,0
+PDN1_Line,Len1Unit,NULL,NULL,NULL
+PDN1_Line,length2,CONST,0,0
+PDN1_Line,Len2Unit,NULL,NULL,NULL
+PDN1_Line,Volume,CONST,0,0
+PDN1_Line,VolUnit,CONST,5,5
+PDN1_Line,Weight1,CONST,0,0
+PDN1_Line,Wght1Unit,NULL,NULL,NULL
+PDN1_Line,Weight2,CONST,0,0
+PDN1_Line,Wght2Unit,NULL,NULL,NULL
+PDN1_Line,Factor1,CONST,1,1
+PDN1_Line,Factor2,CONST,1,1
+PDN1_Line,Factor3,CONST,1,1
+PDN1_Line,Factor4,CONST,1,1
+PDN1_Line,PackQty,SOURCE,= Quantity,144
+PDN1_Line,UpdInvntry,CONST,Y,Y
+PDN1_Line,BaseDocNum,SOURCE,PO number,25
+PDN1_Line,BaseAtCard,NULL,NULL,
+PDN1_Line,SWW,NULL,NULL,
+PDN1_Line,VatSum,CONST,0,0
+PDN1_Line,VatSumFrgn,CONST,0,0
+PDN1_Line,VatSumSy,CONST,0,0
+PDN1_Line,FinncPriod,SYSTEM,leave NULL - SAP assigns or derives from the PO,25
+PDN1_Line,ObjType,CONST,20,20
+PDN1_Line,LogInstanc,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,BlockNum,NULL,NULL,NULL
+PDN1_Line,ImportLog,NULL,NULL,NULL
+PDN1_Line,DedVatSum,CONST,0,0
+PDN1_Line,DedVatSumF,CONST,0,0
+PDN1_Line,DedVatSumS,CONST,0,0
+PDN1_Line,IsAqcuistn,CONST,N,N
+PDN1_Line,DistribSum,CONST,0,0
+PDN1_Line,DstrbSumFC,CONST,0,0
+PDN1_Line,DstrbSumSC,CONST,0,0
+PDN1_Line,GrssProfit,CONST,0,0
+PDN1_Line,GrssProfSC,CONST,0,0
+PDN1_Line,GrssProfFC,CONST,0,0
+PDN1_Line,VisOrder,SOURCE,= LineNum,0
+PDN1_Line,INMPrice,SYSTEM,leave NULL - SAP assigns or derives from the PO,1.99
+PDN1_Line,PoTrgNum,NULL,NULL,NULL
+PDN1_Line,PoTrgEntry,NULL,NULL,
+PDN1_Line,DropShip,CONST,N,N
+PDN1_Line,PoLineNum,NULL,NULL,NULL
+PDN1_Line,Address,NULL,NULL,
+PDN1_Line,TaxCode,NULL,NULL,
+PDN1_Line,TaxType,CONST,Y,Y
+PDN1_Line,OrigItem,NULL,NULL,NULL
+PDN1_Line,BackOrdr,CONST,Y,Y
+PDN1_Line,FreeTxt,SOURCE,PI <PI#> seq <SEQ PI#>; cust style <STYLE# in parens>; cust ref <PO# ref>; mixed packing note,NULL
+PDN1_Line,PickStatus,CONST,N,N
+PDN1_Line,PickOty,CONST,0,0
+PDN1_Line,PickIdNo,NULL,NULL,NULL
+PDN1_Line,TrnsCode,CONST,1,1
+PDN1_Line,VatAppld,CONST,0,0
+PDN1_Line,VatAppldFC,CONST,0,0
+PDN1_Line,VatAppldSC,CONST,0,0
+PDN1_Line,BaseQty,SOURCE,= Quantity,144
+PDN1_Line,BaseOpnQty,SYSTEM,leave NULL - SAP assigns or derives from the PO,144
+PDN1_Line,VatDscntPr,CONST,0,0
+PDN1_Line,WtLiable,CONST,N,N
+PDN1_Line,DeferrTax,CONST,N,N
+PDN1_Line,EquVatPer,CONST,0,0
+PDN1_Line,EquVatSum,CONST,0,0
+PDN1_Line,EquVatSumF,CONST,0,0
+PDN1_Line,EquVatSumS,CONST,0,0
+PDN1_Line,LineVat,CONST,0,0
+PDN1_Line,LineVatlF,CONST,0,0
+PDN1_Line,LineVatS,CONST,0,0
+PDN1_Line,unitMsr,NULL,NULL,
+PDN1_Line,NumPerMsr,CONST,1,1
+PDN1_Line,CEECFlag,CONST,S,S
+PDN1_Line,ToStock,CONST,0,0
+PDN1_Line,ToDiff,CONST,0,0
+PDN1_Line,ExciseAmt,CONST,0,0
+PDN1_Line,TaxPerUnit,CONST,0,0
+PDN1_Line,TotInclTax,CONST,0,0
+PDN1_Line,CountryOrg,SOURCE,'BD',NULL
+PDN1_Line,StckDstSum,CONST,0,0
+PDN1_Line,ReleasQtty,CONST,0,0
+PDN1_Line,LineType,CONST,R,R
+PDN1_Line,TranType,NULL,NULL,NULL
+PDN1_Line,Text,NULL,NULL,NULL
+PDN1_Line,OwnerCode,SYSTEM,leave NULL - SAP assigns or derives from the PO,18
+PDN1_Line,StockPrice,CONST,0,0
+PDN1_Line,ConsumeFCT,CONST,N,N
+PDN1_Line,LstByDsSum,CONST,0,0
+PDN1_Line,StckINMPr,CONST,0,0
+PDN1_Line,LstBINMPr,CONST,0,0
+PDN1_Line,StckDstFc,CONST,0,0
+PDN1_Line,StckDstSc,CONST,0,0
+PDN1_Line,LstByDsFc,CONST,0,0
+PDN1_Line,LstByDsSc,CONST,0,0
+PDN1_Line,StockSum,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+PDN1_Line,StockSumFc,CONST,0,0
+PDN1_Line,StockSumSc,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+PDN1_Line,StckSumApp,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+PDN1_Line,StckAppFc,CONST,0,0
+PDN1_Line,StckAppSc,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+PDN1_Line,ShipToCode,SYSTEM,leave NULL - SAP assigns or derives from the PO,Northwest Booster Club
+PDN1_Line,ShipToDesc,SYSTEM,leave NULL - SAP assigns or derives from the PO,2710 N. Rd.  Grand Island NE  68803 USA
+PDN1_Line,StckAppD,CONST,0,0
+PDN1_Line,StckAppDFC,CONST,0,0
+PDN1_Line,StckAppDSC,CONST,0,0
+PDN1_Line,BasePrice,CONST,E,E
+PDN1_Line,GTotal,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+PDN1_Line,GTotalFC,CONST,0,0
+PDN1_Line,GTotalSC,SYSTEM,leave NULL - SAP assigns or derives from the PO,286.56
+PDN1_Line,DistribExp,CONST,Y,Y
+PDN1_Line,DescOW,CONST,N,N
+PDN1_Line,DetailsOW,CONST,N,N
+PDN1_Line,GrossBase,NULL,NULL,NULL
+PDN1_Line,VatWoDpm,CONST,0,0
+PDN1_Line,VatWoDpmFc,CONST,0,0
+PDN1_Line,VatWoDpmSc,CONST,0,0
+PDN1_Line,CFOPCode,NULL,NULL,NULL
+PDN1_Line,CSTCode,NULL,NULL,NULL
+PDN1_Line,Usage,NULL,NULL,NULL
+PDN1_Line,TaxOnly,CONST,N,N
+PDN1_Line,WtCalced,CONST,N,N
+PDN1_Line,QtyToShip,CONST,0,0
+PDN1_Line,DelivrdQty,CONST,0,0
+PDN1_Line,OrderedQty,CONST,0,0
+PDN1_Line,CogsOcrCod,NULL,NULL,NULL
+PDN1_Line,CiOppLineN,CONST,-1,-1
+PDN1_Line,CogsAcct,SYSTEM,leave NULL - SAP assigns or derives from the PO,_SYS00000000069
+PDN1_Line,ChgAsmBoMW,CONST,N,N
+PDN1_Line,ActDelDate,SOURCE,= header DocDate,2011-12-27 00:00:00
+PDN1_Line,OcrCode2,NULL,NULL,NULL
+PDN1_Line,OcrCode3,NULL,NULL,NULL
+PDN1_Line,OcrCode4,NULL,NULL,NULL
+PDN1_Line,OcrCode5,NULL,NULL,NULL
+PDN1_Line,TaxDistSum,CONST,0,0
+PDN1_Line,TaxDistSFC,CONST,0,0
+PDN1_Line,TaxDistSSC,CONST,0,0
+PDN1_Line,PostTax,CONST,Y,Y
+PDN1_Line,Excisable,NULL,NULL,NULL
+PDN1_Line,AssblValue,CONST,0,0
+PDN1_Line,RG23APart1,NULL,NULL,NULL
+PDN1_Line,RG23APart2,NULL,NULL,NULL
+PDN1_Line,RG23CPart1,NULL,NULL,NULL
+PDN1_Line,RG23CPart2,NULL,NULL,NULL
+PDN1_Line,CogsOcrCo2,NULL,NULL,NULL
+PDN1_Line,CogsOcrCo3,NULL,NULL,NULL
+PDN1_Line,CogsOcrCo4,NULL,NULL,NULL
+PDN1_Line,CogsOcrCo5,NULL,NULL,NULL
+PDN1_Line,LnExcised,NULL,NULL,NULL
+PDN1_Line,LocCode,NULL,NULL,NULL
+PDN1_Line,StockValue,CONST,0,0
+PDN1_Line,GPTtlBasPr,CONST,0,0
+PDN1_Line,unitMsr2,NULL,NULL,
+PDN1_Line,NumPerMsr2,CONST,1,1
+PDN1_Line,SpecPrice,CONST,N,N
+PDN1_Line,CSTfIPI,NULL,NULL,NULL
+PDN1_Line,CSTfPIS,NULL,NULL,NULL
+PDN1_Line,CSTfCOFINS,NULL,NULL,NULL
+PDN1_Line,ExLineNo,NULL,NULL,NULL
+PDN1_Line,isSrvCall,CONST,N,N
+PDN1_Line,PQTReqQty,NULL,NULL,NULL
+PDN1_Line,PQTReqDate,NULL,NULL,NULL
+PDN1_Line,PcDocType,CONST,-1,-1
+PDN1_Line,PcQuantity,NULL,NULL,NULL
+PDN1_Line,LinManClsd,CONST,U,U
+PDN1_Line,VatGrpSrc,CONST,N,N
+PDN1_Line,NoInvtryMv,CONST,N,N
+PDN1_Line,ActBaseEnt,NULL,NULL,NULL
+PDN1_Line,ActBaseLn,NULL,NULL,NULL
+PDN1_Line,ActBaseNum,NULL,NULL,NULL
+PDN1_Line,OpenRtnQty,NULL,NULL,NULL
+PDN1_Line,AgrNo,NULL,NULL,NULL
+PDN1_Line,AgrLnNum,NULL,NULL,NULL
+PDN1_Line,CredOrigin,NULL,NULL,NULL
+PDN1_Line,Surpluses,NULL,NULL,NULL
+PDN1_Line,DefBreak,NULL,NULL,NULL
+PDN1_Line,Shortages,NULL,NULL,NULL
+PDN1_Line,UomEntry,CONST,-1,-1
+PDN1_Line,UomEntry2,CONST,-1,-1
+PDN1_Line,UomCode,CONST,Manual,Manual
+PDN1_Line,UomCode2,CONST,Manual,Manual
+PDN1_Line,FromWhsCod,NULL,NULL,NULL
+PDN1_Line,NeedQty,CONST,N,N
+PDN1_Line,PartRetire,CONST,N,N
+PDN1_Line,RetireQty,NULL,NULL,NULL
+PDN1_Line,RetireAPC,NULL,NULL,NULL
+PDN1_Line,RetirAPCFC,NULL,NULL,NULL
+PDN1_Line,RetirAPCSC,NULL,NULL,NULL
+PDN1_Line,InvQty,SOURCE,= Quantity,144
+PDN1_Line,OpenInvQty,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,EnSetCost,CONST,N,N
+PDN1_Line,RetCost,NULL,NULL,NULL
+PDN1_Line,Incoterms,CONST,0,0
+PDN1_Line,TransMod,CONST,0,0
+PDN1_Line,LineVendor,NULL,NULL,NULL
+PDN1_Line,DistribIS,CONST,N,N
+PDN1_Line,ISDistrb,NULL,NULL,NULL
+PDN1_Line,ISDistrbFC,NULL,NULL,NULL
+PDN1_Line,ISDistrbSC,NULL,NULL,NULL
+PDN1_Line,IsByPrdct,CONST,N,N
+PDN1_Line,ItemType,CONST,4,4
+PDN1_Line,PriceEdit,CONST,N,N
+PDN1_Line,PrntLnNum,NULL,NULL,NULL
+PDN1_Line,LinePoPrss,CONST,N,N
+PDN1_Line,FreeChrgBP,NULL,NULL,NULL
+PDN1_Line,TaxRelev,CONST,Y,Y
+PDN1_Line,LegalText,NULL,NULL,NULL
+PDN1_Line,ThirdParty,CONST,N,N
+PDN1_Line,LicTradNum,NULL,NULL,NULL
+PDN1_Line,InvQtyOnly,CONST,N,N
+PDN1_Line,UnencReasn,NULL,NULL,NULL
+PDN1_Line,ShipFromCo,NULL,NULL,NULL
+PDN1_Line,ShipFromDe,NULL,NULL,NULL
+PDN1_Line,FisrtBin,NULL,NULL,NULL
+PDN1_Line,AllocBinC,NULL,NULL,NULL
+PDN1_Line,ExpType,NULL,NULL,NULL
+PDN1_Line,ExpUUID,NULL,NULL,NULL
+PDN1_Line,ExpOpType,NULL,NULL,NULL
+PDN1_Line,DIOTNat,NULL,NULL,NULL
+PDN1_Line,MYFtype,NULL,NULL,NULL
+PDN1_Line,GPBefDisc,SYSTEM,leave NULL - SAP assigns or derives from the PO,1.99
+PDN1_Line,ReturnRsn,CONST,-1,-1
+PDN1_Line,ReturnAct,CONST,-1,-1
+PDN1_Line,StgSeqNum,NULL,NULL,NULL
+PDN1_Line,StgEntry,NULL,NULL,NULL
+PDN1_Line,StgDesc,NULL,NULL,NULL
+PDN1_Line,ItmTaxType,NULL,NULL,NULL
+PDN1_Line,SacEntry,NULL,NULL,NULL
+PDN1_Line,NCMCode,CONST,-1,-1
+PDN1_Line,HsnEntry,NULL,NULL,NULL
+PDN1_Line,OriBAbsEnt,NULL,NULL,NULL
+PDN1_Line,OriBLinNum,NULL,NULL,NULL
+PDN1_Line,OriBDocTyp,NULL,NULL,NULL
+PDN1_Line,IsPrscGood,CONST,N,N
+PDN1_Line,IsCstmAct,CONST,N,N
+PDN1_Line,EncryptIV,NULL,NULL,NULL
+PDN1_Line,ExtTaxRate,NULL,NULL,NULL
+PDN1_Line,ExtTaxSum,NULL,NULL,NULL
+PDN1_Line,TaxAmtSrc,CONST,S,S
+PDN1_Line,ExtTaxSumF,NULL,NULL,NULL
+PDN1_Line,ExtTaxSumS,NULL,NULL,NULL
+PDN1_Line,StdItemId,NULL,NULL,NULL
+PDN1_Line,CommClass,NULL,NULL,NULL
+PDN1_Line,VatExEntry,NULL,NULL,NULL
+PDN1_Line,VatExLN,NULL,NULL,NULL
+PDN1_Line,NatOfTrans,NULL,NULL,NULL
+PDN1_Line,ISDtCryImp,NULL,NULL,NULL
+PDN1_Line,ISDtRgnImp,NULL,NULL,NULL
+PDN1_Line,ISOrCryExp,NULL,NULL,NULL
+PDN1_Line,ISOrRgnExp,NULL,NULL,NULL
+PDN1_Line,NVECode,NULL,NULL,NULL
+PDN1_Line,PoNum,NULL,NULL,NULL
+PDN1_Line,PoItmNum,NULL,NULL,NULL
+PDN1_Line,IndEscala,CONST,N,N
+PDN1_Line,CESTCode,NULL,NULL,NULL
+PDN1_Line,CtrSealQty,NULL,NULL,NULL
+PDN1_Line,CNJPMan,NULL,NULL,NULL
+PDN1_Line,UFFiscBene,NULL,NULL,NULL
+PDN1_Line,CUSplit,CONST,N,N
+PDN1_Line,LegalTIMD,NULL,NULL,NULL
+PDN1_Line,LegalTTCA,NULL,NULL,NULL
+PDN1_Line,LegalTW,NULL,NULL,NULL
+PDN1_Line,LegalTCD,NULL,NULL,NULL
+PDN1_Line,RevCharge,CONST,N,N
+PDN1_Line,ListNum,NULL,NULL,NULL
+PDN1_Line,RecogAmt,NULL,NULL,NULL
+PDN1_Line,RecogAmtSC,NULL,NULL,NULL
+PDN1_Line,RecogAmtFC,NULL,NULL,NULL
+PDN1_Line,RecogVatGr,NULL,NULL,NULL
+PDN1_Line,RecogVatPr,NULL,NULL,NULL
+PDN1_Line,NonDdAmt,NULL,NULL,NULL
+PDN1_Line,NonDdAmtSC,NULL,NULL,NULL
+PDN1_Line,NonDdAmtFC,NULL,NULL,NULL
+PDN1_Line,PPTaxExRe,NULL,NULL,NULL
+PDN1_Line,PlPaWght,NULL,NULL,NULL
+PDN1_Line,CUP,NULL,NULL,NULL
+PDN1_Line,CIG,NULL,NULL,NULL
+PDN1_Line,OperProfit,NULL,NULL,NULL
+PDN1_Line,OperProfFC,NULL,NULL,NULL
+PDN1_Line,OperProfSy,NULL,NULL,NULL
+PDN1_Line,NetIncome,NULL,NULL,NULL
+PDN1_Line,NetIncomFC,NULL,NULL,NULL
+PDN1_Line,NetIncomSy,NULL,NULL,NULL
+PDN1_Line,UoMNum,CONST,1,1
+PDN1_Line,UoMDen,CONST,1,1
+PDN1_Line,UoMNum2,CONST,1,1
+PDN1_Line,UoMDen2,CONST,1,1
+PDN1_Line,CSTfIBS,NULL,NULL,NULL
+PDN1_Line,CSTfCBS,NULL,NULL,NULL
+PDN1_Line,CSTfIS,NULL,NULL,NULL
+PDN1_Line,EnLicTradN,NULL,NULL,NULL
+PDN1_Line,U_NBS_PPack,NULL,NULL,NULL
+PDN1_Line,U_Attr3,NULL,NULL,NULL
+PDN1_Line,U_NBS_PrOr,NULL,NULL,NULL
+PDN1_Line,U_Color,SOURCE,Pac: COLOR,NULL
+PDN1_Line,U_Size,NULL,NULL,NULL
+PDN1_Line,U_StMaster,NULL,NULL,NULL
+PDN1_Line,U_Rebate,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_AgentComm,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_SchoolCode,NULL,NULL,NULL
+PDN1_Line,U_ArtNo,NULL,NULL,NULL
+PDN1_Line,U_Block,NULL,NULL,NULL
+PDN1_Line,U_CollarRib,NULL,NULL,NULL
+PDN1_Line,U_PlayerNo,NULL,NULL,NULL
+PDN1_Line,U_RefNo,NULL,NULL,NULL
+PDN1_Line,U_FOBPrice,LOOKUP,LOOKUP PO line U_FOBPrice,3.75
+PDN1_Line,U_KAPSPO,NULL,NULL,NULL
+PDN1_Line,U_Duty,SYSTEM,leave NULL - SAP assigns or derives from the PO,0.14925
+PDN1_Line,U_MPF,SYSTEM,leave NULL - SAP assigns or derives from the PO,0.01194
+PDN1_Line,U_MiscDuty,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_BrokerFee,SYSTEM,leave NULL - SAP assigns or derives from the PO,0.03
+PDN1_Line,U_Freight,SYSTEM,leave NULL - SAP assigns or derives from the PO,0.14
+PDN1_Line,U_LocalWH,SYSTEM,leave NULL - SAP assigns or derives from the PO,0.015
+PDN1_Line,U_QCFee,SYSTEM,leave NULL - SAP assigns or derives from the PO,0.01
+PDN1_Line,U_LDP,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_BCSNo,NULL,NULL,NULL
+PDN1_Line,U_Insurance,SYSTEM,leave NULL - SAP assigns or derives from the PO,0.02985
+PDN1_Line,U_Finance,SYSTEM,leave NULL - SAP assigns or derives from the PO,0.0597
+PDN1_Line,U_DRIGM,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_AgentCommLDP,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_MiscExp,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_DomHT,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_FixedCharge,SYSTEM,leave NULL - SAP assigns or derives from the PO,0.215
+PDN1_Line,U_Incremental,SYSTEM,leave NULL - SAP assigns or derives from the PO,0.25074
+PDN1_Line,U_DRIGMLDP,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_KidLT,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_CamoRoyalty,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_Marketing,SYSTEM,leave NULL - SAP assigns or derives from the PO,0.02
+PDN1_Line,U_CamoFabAssist,NULL,NULL,NULL
+PDN1_Line,U_CamoAssistDuty,NULL,NULL,NULL
+PDN1_Line,U_CartonNo,SOURCE,Pac: CTN.(S)-CTN.(E),NULL
+PDN1_Line,U_PcsPerCarton,SOURCE,Pac: QTY/CTN,NULL
+PDN1_Line,U_RevDelivery,NULL,NULL,NULL
+PDN1_Line,U_NumfCart,SOURCE,Pac: CTN,NULL
+PDN1_Line,U_CamoDuty,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_Cunsump,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_AirFreight,NULL,NULL,NULL
+PDN1_Line,U_A1WMS_RMAQTY,NULL,NULL,NULL
+PDN1_Line,U_A1WMS_Comments,NULL,NULL,NULL
+PDN1_Line,U_Configuration,NULL,NULL,NULL
+PDN1_Line,U_PRX_SID,NULL,NULL,NULL
+PDN1_Line,U_PRX_VMas,NULL,NULL,NULL
+PDN1_Line,U_PRX_VNum,NULL,NULL,NULL
+PDN1_Line,U_PRX_Note,NULL,NULL,NULL
+PDN1_Line,U_ReOrder,NULL,NULL,NULL
+PDN1_Line,U_CustPO,NULL,NULL,NULL
+PDN1_Line,U_CustPORev,NULL,NULL,NULL
+PDN1_Line,U_CustPOLine,NULL,NULL,NULL
+PDN1_Line,U_CustPOShip,NULL,NULL,NULL
+PDN1_Line,U_Tracking,NULL,NULL,NULL
+PDN1_Line,U_ShipExpDate,NULL,NULL,NULL
+PDN1_Line,U_ContainerRel,NULL,NULL,NULL
+PDN1_Line,U_ContainerRelDate,NULL,NULL,NULL
+PDN1_Line,U_ImportHeaderID,NULL,NULL,NULL
+PDN1_Line,U_ImportLineID,NULL,NULL,NULL
+PDN1_Line,U_ImportSource,NULL,NULL,NULL
+PDN1_Line,U_UPC,NULL,NULL,NULL
+PDN1_Line,U_ImportSourceOrig,NULL,NULL,NULL
+PDN1_Line,U_CartonWeight,SOURCE,Pac: G.W/CTN,NULL
+PDN1_Line,U_CartonLength,SOURCE,Pac: LENGTH,NULL
+PDN1_Line,U_CartonWidth,SOURCE,Pac: WIDTH,NULL
+PDN1_Line,U_CartonHeight,SOURCE,Pac: HEIGHT,NULL
+PDN1_Line,U_SpecialTariff,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_CustRetailPrice,SYSTEM,leave NULL - SAP assigns or derives from the PO,0
+PDN1_Line,U_PlayerName,NULL,NULL,NULL
+PDN1_Line,U_WMS_RecAction,NULL,NULL,NULL
+PDN1_Line,U_WMS_DownloadQty,NULL,NULL,NULL
+PDN1_Line,U_WMS_QtyDownloaded,NULL,NULL,NULL
+PDN1_Line,U_WMS_DownloadStatus,NULL,NULL,NULL
+PDN1_Line,U_WMSSource,NULL,NULL,NULL
+PDN1_Line,U_WMSHeaderID,NULL,NULL,NULL
+PDN1_Line,U_WMSLineID,NULL,NULL,NULL
+PDN1_Line,U_Season,NULL,NULL,NULL
+PDN1_Line,U_BaseType,SOURCE,22,22
+PDN1_Line,U_BaseEntry,SOURCE,= BaseEntry,25
+PDN1_Line,U_BaseLine,SOURCE,= BaseLine,0
+PDN1_Line,U_CustRef,NULL,NULL,NULL
+PDN1_Line,U_LinePOPrefix,SOURCE,= U_POPrefix,ABM
+PDN1_Line,U_QuotedDelivery,NULL,NULL,NULL
+PDN1_Line,U_LineContRefNo,NULL,NULL,NULL
+PDN1_Line,U_BuyerPartNumber,NULL,NULL,NULL
+PDN1_Line,U_LineUltDelivery,NULL,NULL,NULL
+PDN1_Line,U_LineTrackNo,NULL,NULL,NULL
+PDN1_Line,U_SalesforceID,NULL,NULL,NULL
+PDN1_Line,U_SalesforceUpdated,NULL,NULL,NULL
+PDN1_Line,U_LineProdStatus,NULL,NULL,NULL
+PDN1_Line,U_LineSecCustSell,NULL,NULL,NULL
+PDN1_Line,U_SpecialTariffPct,NULL,NULL,NULL
+PDN1_Line,U_SpecialTariffActualPct,NULL,NULL,NULL
+PDN1_Line,U_Packing,NULL,NULL,NULL
+PDN1_Line,U_FirstSalePrice,NULL,NULL,NULL
+PDN1_Line,U_EstCompDate,NULL,NULL,NULL
+PDN1_Line,U_CPSCEFileCpltd,CONST,N,N
+PDN1_Line,U_SAPOrderLineID,NULL,NULL,NULL
+PDN1_Line,U_PlayerNum,NULL,NULL,NULL
+PDN1_Line,U_SAPDocumentLineID,NULL,NULL,NULL
+PDN1_Line,U_ProdStatusBlockLine,NULL,NULL,NULL
+PDN1_Line,U_OrigQuantity,NULL,NULL,NULL
+PDN1_Line,U_CalcPrice,NULL,NULL,NULL
+PDN1_Line,U_CustomerCommitDt,NULL,NULL,NULL
+PDN1_Line,U_Shipment1Qty,NULL,NULL,NULL
+PDN1_Line,U_Shipment2Date,NULL,NULL,NULL
+PDN1_Line,U_Shipment2Qty,NULL,NULL,NULL
+PDN1_Line,U_Shipment3Date,NULL,NULL,NULL
+PDN1_Line,U_Shipment3Qty,NULL,NULL,NULL
+PDN1_Line,U_Shipment4Date,NULL,NULL,NULL
+PDN1_Line,U_Shipment4Qty,NULL,NULL,NULL
