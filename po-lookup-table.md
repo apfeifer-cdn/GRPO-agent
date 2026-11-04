@@ -22,6 +22,7 @@ SELECT
     H.U_SONo,
     L.ItemCode,
     I.U_Proto,
+    I.U_StyleId,
     I.U_MxPrStyl,
     L.Dscription,
     L.U_Color,
@@ -30,6 +31,7 @@ SELECT
     L.Price,
     L.U_FOBPrice,
     L.WhsCode,
+    L.ShipDate,
     H.DocDate         AS PODate,
     GETDATE()         AS ExportedAt
 FROM OPOR H
@@ -58,7 +60,9 @@ Optional scope: `AND H.CardCode IN (...)` for offshore factory vendors. If `U_Co
 | U_POPrefix, U_CustRefNo, U_SONo | text | header UDFs when the invoice has a single PO; cross-check prefix vs packing PO# |
 | ItemCode, Dscription, U_Color | text | Dscription may replace the factory DESCRIPTION |
 | U_Proto | text | OITM.U_Proto - the DRI C-number the factory prints as STYLE#; **primary match key** |
+| U_StyleId | text | OITM customer style id (`83904TF`); match key when the packing STYLE# is not a C-number (DON prints `#83904TF`) |
 | U_MxPrStyl | text | OITM matrix parent style (`SP500`); cross-checked against the packing paren text for SPO/VAC |
+| ShipDate | date | POR1 line ship date; tie-breaker when several lines match - the line due on the invoice date wins |
 | OrderedQty, OpenQty | number | over-receipt check: packing qty ≤ OpenQty |
 | Price, U_FOBPrice | number | → PDN1 `Price`, `U_FOBPrice` |
 | WhsCode | text | → PDN1 `WhsCode` |
@@ -87,6 +91,9 @@ spaces removed, GREY→GRAY). A line "matches the color" when COLORKEY equals th
 `U_Color` `26Charcoal`); failing both, containment of 3+ characters (`KHA` in `11Khaki`).
 1. `PO + U_Proto` lines that match the color → OK. One line for the proto with no color →
    OK. Several colorless lines → rule 4a. Lines exist but none match → MISMATCH listing them.
+1a. No proto hit: `PO + U_StyleId` (packing STYLE# with any leading `#` stripped, or the
+   paren text) lines that match the color → OK. Covers DON and other customers whose POs
+   carry the customer style rather than a C-number.
 2. No `U_Proto` on the PO lines (old items, or export without OITM): `PO + ItemCode + COLORKEY`
    exact → OK; `PO + ItemCode` one colorless line → OK; other colors → MISMATCH.
 3. `PO + C-number prefix` (ItemCode starts with the packing C-number + `-`) with color segment
@@ -94,8 +101,9 @@ spaces removed, GREY→GRAY). A line "matches the color" when COLORKEY equals th
 4. `PO + style prefix` (ItemCode before the first `-` = paren text) with `U_Color` =
    COLORKEY → OK. One colorless line → REVIEW. Otherwise MISMATCH listing open lines.
 4a. **Several open lines in the same color** (same SKU ordered twice on one PO, or a split
-   line): **quantity decides.** The line whose `OpenQty` equals the packing row quantity →
-   OK, silent. None exact: a line whose `OrderedQty` equals the row (partially received) →
+   line): **ship date, then quantity.** Exactly one line whose POR1 `ShipDate` equals the
+   invoice date → OK, silent. Otherwise the line whose `OpenQty` equals the packing row
+   quantity → OK, silent. None exact: a line whose `OrderedQty` equals the row (partially received) →
    REVIEW. None: lowest `LineNum` whose `OpenQty` covers the row → REVIEW naming the
    alternatives. None covers → MISMATCH. Applies on every rule above.
 5. **One GRPO line per packing row - never merge.** Two rows can reference the same PO line

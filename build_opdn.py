@@ -115,6 +115,8 @@ def parse_factory(path):
             color=str(g("COLOR")).strip(), desc=str(g("DESCRIPTION")).strip(), qty=int(g("Total PCS.")),
             gw_ctn=float(g("G.W/CTN")), nw_ctn=float(g("N.W/ CTN")), gw=float(g("Total G.W")), nw=float(g("Total N.W")),
             L=float(g("LENGTH")), W=float(g("WIDTH")), H=float(g("HEIGHT")), cbm=float(g("CBM"))))
+    for l in lines:
+        l["inv_date"] = h.get("invoice_date")
     h["lines"] = lines
     for k in ("pac_pcs", "pac_ctn", "pac_gw", "pac_nw", "pac_cbm"):
         h.setdefault(k, None)  # missing totals row -> reconciliation reports MISMATCH, not a crash
@@ -227,7 +229,7 @@ def load_lookup(path):
         ws = openpyxl.load_workbook(path, data_only=True).worksheets[0]
         hdr = [c.value for c in ws[1]]
         rows = [dict(zip(hdr, r)) for r in ws.iter_rows(min_row=2, values_only=True) if any(v is not None for v in r)]
-    by_key, by_po_item, by_po_style, by_po_cnum, by_po_proto, by_po = (defaultdict(list) for _ in range(6))
+    by_key, by_po_item, by_po_style, by_po_cnum, by_po_proto, by_po, by_po_styleid = (defaultdict(list) for _ in range(7))
     for r in rows:
         if r.get("ItemCode") in (None, "NULL"): continue
         po = int(float(r["PONum"])); item = str(r["ItemCode"]).strip()
@@ -239,11 +241,14 @@ def load_lookup(path):
         by_po_style[(po, item.split("-")[0].upper())].append(r)   # stock SKUs are <style>-<color>-<size>
         if r.get("U_Proto") not in (None, "", "NULL"):
             by_po_proto[(po, str(r["U_Proto"]).strip().upper())].append(r)
+        sid = next((r[k] for k in ("U_StyleId", "U_StyleID", "U_STYLEID") if r.get(k) not in (None, "", "NULL")), None)
+        if sid:
+            by_po_styleid[(po, str(sid).strip().lstrip("#").upper())].append(r)
         parts = item.split("-")
         if len(parts) >= 3:
             by_po_cnum[(po, "-".join(parts[:2]).upper())].append(r)  # C-number SKUs: C24-02235-KHA-OS
     exported = next((r.get("ExportedAt") for r in rows if r.get("ExportedAt")), None)
-    return by_key, by_po_item, exported, by_po_style, by_po_cnum, by_po_proto, by_po
+    return by_key, by_po_item, exported, by_po_style, by_po_cnum, by_po_proto, by_po, by_po_styleid
 
 def num(v):
     # Excel sometimes exports numeric columns with a time/date format; recover the serial value
@@ -270,6 +275,20 @@ def pick(hits, l, label):
     # OrderedQty == row qty -> REVIEW; lowest LineNum that covers -> REVIEW; nothing covers -> MISMATCH
     hits = sorted(hits, key=lambda x: int(num(x["BaseLine"])))
     q = l["qty"]
+    inv = l.get("inv_date")
+    if inv:
+        def sd(x):
+            v = x.get("ShipDate")
+            if isinstance(v, dt.datetime): return v.date()
+            if isinstance(v, str):
+                try: return dt.datetime.fromisoformat(v.strip()[:10]).date()
+                except ValueError: return parse_date(v).date() if parse_date(v) else None
+            return None
+        dated = [x for x in hits if sd(x) == inv.date()]
+        if len(dated) == 1:
+            return dated[0], "OK", ""
+        if dated:
+            hits = dated  # several lines due on the invoice date: fall through to quantity
     opts = ", ".join(f"line {int(num(x['BaseLine']))} {x['_item']} ordered {num(x.get('OrderedQty')) or 0:g} open {num(x.get('OpenQty')) or 0:g}" for x in hits)
     exact = [x for x in hits if abs((num(x.get("OpenQty")) or 0) - q) < 1e-6]
     if len(exact) == 1:
@@ -289,7 +308,7 @@ def pick(hits, l, label):
 
 def resolve(l, lk):
     # match order: U_Proto + color -> exact key -> ItemCode -> C-number prefix + color -> style prefix + color
-    by_key, by_po_item, _, by_po_style, by_po_cnum, by_po_proto, by_po = lk
+    by_key, by_po_item, _, by_po_style, by_po_cnum, by_po_proto, by_po, by_po_styleid = lk
     ck = color_key(l["color"])
     status, note = "OK", ""
     r = None
@@ -309,6 +328,19 @@ def resolve(l, lk):
             if not r: return r, status, note
         else:
             return None, "MISMATCH", f"PO {l['po']} proto {l['proto']}: no open line in color '{l['color']}'; open: {sorted(x['_item'] + ' ' + str(x.get('U_Color')) for x in pc)}"
+    if not r:
+        for sid in {l["item"].lstrip("#").upper(), (l.get("styleid") or "").lstrip("#").upper()} - {""}:
+            sc = by_po_styleid.get((l["po"], sid), [])
+            if not sc: continue
+            hit = color_hits(sc, ck)
+            if len(hit) == 1:
+                r = hit[0]; break
+            if len(hit) > 1:
+                r, status, note = pick(hit, l, f"style id {sid}")
+                if not r: return r, status, note
+                break
+            if len(sc) == 1 and not color_key(sc[0].get("U_Color")):
+                r = sc[0]; break
     if not r:
         hit = by_key.get(f"{l['po']}|{l['item']}|{ck}", [])
         if len(hit) == 1:
