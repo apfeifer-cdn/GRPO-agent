@@ -1,16 +1,22 @@
 """Reference implementation: factory Invoice/Packing List (.xls) -> OPDN upload workbook.
 
-Usage: python build_opdn.py <template OPDN_Excel.xlsx> <out_dir> <factory1.xls> [...] [--group invoice|po] [--lookup po_lookup.csv|.xlsx]
---lookup: OPOR/POR1 export per references/po-lookup-table.md; resolves BaseEntry/BaseLine/Price/U_FOBPrice/WhsCode/CardCode.
-Default: one GRPO per invoice (header row + all lines). --group po: one GRPO per DRI PO.
+Usage: python build_opdn.py <factory.xls> [...] --lookup <po_lookup.xlsx|csv> [--group invoice|po] [--emit-csv] [template.xlsx] [out_dir]
+Template defaults to examples/OPDN_Excel_template.xlsx next to this script; out_dir defaults to ./out.
+--lookup: OPOR/POR1/OITM export per references/po-lookup-table.md; resolves BaseEntry/BaseLine/Price/U_FOBPrice/WhsCode/CardCode.
+--emit-csv: also print GRPO_Header and GRPO_Lines as CSV to stdout (fallback when the workbook cannot be attached).
+Always prints a summary block (=== GRPO SUMMARY ===) to stdout; relay it verbatim.
+Default: one GRPO per invoice, one GRPO line per packing-list row (carton-level detail kept). --group po: one GRPO per DRI PO.
 Sheets: OPDN_Header / PDN1_Line (full template shape), GRPO_Header / GRPO_Lines (lean staging), Validation, Lookups_Needed.
 Fields that need SAP lookups are written as LOOKUP:<key>; system-assigned fields are left NULL.
 """
-import re, sys, datetime as dt
+import re, sys, os, datetime as dt
 from collections import OrderedDict, defaultdict
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)  # bundled scripts/xlrd for sandboxes without it
 import xlrd, openpyxl
 
 NULL = "NULL"
+STOCK_PREFIXES = {"SPO", "VAC"}
 
 # ---------- parsing ----------
 def cells(sheet, r):
@@ -100,10 +106,12 @@ def parse_factory(path):
         g = lambda k: row.get(cols[k])
         prefix, po, custref = parse_po(g("PO#"))
         item, cust_style = parse_style(g("STYLE#"))
+        stock = prefix in STOCK_PREFIXES  # SPO/VAC: paren text is the matrix parent style, else the customer style id
         lines.append(dict(
             ctn_s=int(g("CTN. (S)")), ctn_e=int(g("CTN. (E)")), ctn=int(g("CTN")), qty_ctn=int(g("QTY/ CTN")),
             pi=str(g("PI#")).strip(), seq=int(g("SEQ PI#") or 0), po_raw=" ".join(str(g("PO#")).split()),
-            prefix=prefix, po=po, custref=custref, item=item, cust_style=cust_style,
+            prefix=prefix, po=po, custref=custref, item=item, cust_style=cust_style, proto=item,
+            mxprstyl=cust_style if stock else None, styleid=None if stock else cust_style,
             color=str(g("COLOR")).strip(), desc=str(g("DESCRIPTION")).strip(), qty=int(g("Total PCS.")),
             gw_ctn=float(g("G.W/CTN")), nw_ctn=float(g("N.W/ CTN")), gw=float(g("Total G.W")), nw=float(g("Total N.W")),
             L=float(g("LENGTH")), W=float(g("WIDTH")), H=float(g("HEIGHT")), cbm=float(g("CBM"))))
@@ -192,34 +200,17 @@ def line_row(h, l, docentry, linenum, hdr, ex):
         "CountryOrg": "BD", "U_Color": l["color"], "U_LinePOPrefix": l["prefix"],
         "U_CartonNo": f"{l['ctn_s']}-{l['ctn_e']}", "U_PcsPerCarton": l["qty_ctn"], "U_NumfCart": l["ctn"],
         "U_CartonWeight": l["gw_ctn"], "U_CartonLength": l["L"], "U_CartonWidth": l["W"], "U_CartonHeight": l["H"],
-        "FreeTxt": f"PI {l['pi']} seq {l['seq']}; cust style {l['cust_style'] or '-'}; cust ref {l['custref'] or '-'}"
-                   + (f"; mixed packing {l['mixed']}" if l.get("mixed") else ""),
+        "FreeTxt": f"PI {l['pi']} seq {l['seq']}; proto {l['proto']}; "
+                   + (f"matrix parent style {l['mxprstyl']}" if l.get("mxprstyl") else f"style id {l.get('styleid') or '-'}")
+                   + f"; cust ref {l['custref'] or '-'}",
+        "_Proto": l["proto"], "_StyleRef": l.get("mxprstyl") or l.get("styleid") or NULL,
     })
     return row
-
-def merge_same_po_line(po_lines):
-    # packing rows with same PO+item+color hit one PO line -> one GRPO line; keep packing detail in FreeTxt note
-    merged = OrderedDict()
-    for l in po_lines:
-        k = (l["item"], l["color"].upper())
-        if k not in merged:
-            merged[k] = dict(l, packs=[(l["ctn"], l["qty_ctn"])])
-            continue
-        m = merged[k]
-        m["packs"].append((l["ctn"], l["qty_ctn"]))
-        m["ctn_s"], m["ctn_e"] = min(m["ctn_s"], l["ctn_s"]), max(m["ctn_e"], l["ctn_e"])
-        m["ctn"] += l["ctn"]; m["qty"] += l["qty"]; m["gw"] += l["gw"]; m["nw"] += l["nw"]; m["cbm"] += l["cbm"]
-        m["qty_ctn"] = max(m["qty_ctn"], l["qty_ctn"])
-        m["gw_ctn"] = round(m["gw"] / m["ctn"], 2)
-    for m in merged.values():
-        if len(m["packs"]) > 1:
-            m["mixed"] = " + ".join(f"{c}x{q}" for c, q in m["packs"])
-    return list(merged.values())
 
 LEAN_HDR = ["DocEntry","CardCode","CardName","DocDate","NumAtCard","Comments","U_FactoryInv","U_OrderNo","U_POPrefix",
     "U_CustRefNo","U_FOB","U_OceanDest","U_COO","U_TermSale","U_MOT","U_HandoverDate","U_NumCartons","U_GrossWeight",
     "U_CubeMeters","U_BLConsig","U_GenConsig","Address","Address2"]
-LEAN_LINE = ["DocEntry","LineNum","BaseType","BaseRef","BaseEntry","BaseLine","ItemCode","Dscription","Quantity","Price",
+LEAN_LINE = ["DocEntry","LineNum","BaseType","BaseRef","BaseEntry","BaseLine","ItemCode","_Proto","_StyleRef","Dscription","Quantity","Price",
     "U_FOBPrice","WhsCode","U_Color","U_LinePOPrefix","U_CartonNo","U_PcsPerCarton","U_NumfCart","U_CartonWeight",
     "U_CartonLength","U_CartonWidth","U_CartonHeight","CountryOrg","FreeTxt"]
 
@@ -236,60 +227,136 @@ def load_lookup(path):
         ws = openpyxl.load_workbook(path, data_only=True).worksheets[0]
         hdr = [c.value for c in ws[1]]
         rows = [dict(zip(hdr, r)) for r in ws.iter_rows(min_row=2, values_only=True) if any(v is not None for v in r)]
-    by_key, by_po_item, by_po_style, by_po_cnum = {}, defaultdict(list), defaultdict(list), defaultdict(list)
+    by_key, by_po_item, by_po_style, by_po_cnum, by_po_proto, by_po = (defaultdict(list) for _ in range(6))
     for r in rows:
         if r.get("ItemCode") in (None, "NULL"): continue
         po = int(float(r["PONum"])); item = str(r["ItemCode"]).strip()
-        key = r.get("LookupKey") if r.get("LookupKey") not in (None, "NULL") else f"{po}|{item}|{color_key(r.get('U_Color'))}"
+        key = f"{po}|{item}|{color_key(r.get('U_Color'))}"  # always rebuilt; exported LookupKey is informational
         r["_po"], r["_item"] = po, item
-        by_key[str(key).strip()] = r
+        by_key[str(key).strip()].append(r)
+        by_po[po].append(r)
         by_po_item[(po, item)].append(r)
         by_po_style[(po, item.split("-")[0].upper())].append(r)   # stock SKUs are <style>-<color>-<size>
+        if r.get("U_Proto") not in (None, "", "NULL"):
+            by_po_proto[(po, str(r["U_Proto"]).strip().upper())].append(r)
         parts = item.split("-")
         if len(parts) >= 3:
             by_po_cnum[(po, "-".join(parts[:2]).upper())].append(r)  # C-number SKUs: C24-02235-KHA-OS
     exported = next((r.get("ExportedAt") for r in rows if r.get("ExportedAt")), None)
-    return by_key, by_po_item, exported, by_po_style, by_po_cnum
+    return by_key, by_po_item, exported, by_po_style, by_po_cnum, by_po_proto, by_po
 
 def num(v):
+    # Excel sometimes exports numeric columns with a time/date format; recover the serial value
+    if isinstance(v, dt.datetime):
+        from openpyxl.utils.datetime import to_excel
+        return float(to_excel(v))
+    if isinstance(v, dt.time):
+        return (v.hour * 3600 + v.minute * 60 + v.second + v.microsecond / 1e6) / 86400
     try: return float(v)
     except (TypeError, ValueError): return None
 
+def color_hits(cands, ck):
+    # exact: U_Color name or ItemCode color segment equals packing color; loose: containment (>=3 chars)
+    def seg(x):
+        parts = x["_item"].split("-")
+        return color_key(parts[-2]) if len(parts) >= 3 else ""
+    exact = [x for x in cands if ck and (color_key(x.get("U_Color")) == ck or seg(x) == ck)]
+    if exact or len(ck) < 3:
+        return exact
+    return [x for x in cands if (uk := color_key(x.get("U_Color"))) and (ck in uk or uk in ck)]
+
+def pick(hits, l, label):
+    # several open lines match PO+proto+color: quantity decides. OpenQty == row qty -> OK;
+    # OrderedQty == row qty -> REVIEW; lowest LineNum that covers -> REVIEW; nothing covers -> MISMATCH
+    hits = sorted(hits, key=lambda x: int(num(x["BaseLine"])))
+    q = l["qty"]
+    opts = ", ".join(f"line {int(num(x['BaseLine']))} {x['_item']} ordered {num(x.get('OrderedQty')) or 0:g} open {num(x.get('OpenQty')) or 0:g}" for x in hits)
+    exact = [x for x in hits if abs((num(x.get("OpenQty")) or 0) - q) < 1e-6]
+    if len(exact) == 1:
+        return exact[0], "OK", ""
+    if len(exact) > 1:
+        x = exact[0]
+        return x, "REVIEW", f"{len(exact)} open lines for {label} color '{l['color']}' on PO {l['po']} all with open qty {q:g} ({opts}); took line {int(num(x['BaseLine']))}"
+    ordered = [x for x in hits if abs((num(x.get("OrderedQty")) or 0) - q) < 1e-6 and (num(x.get("OpenQty")) or 0) >= q - 1e-6]
+    if ordered:
+        x = ordered[0]
+        return x, "REVIEW", f"{len(hits)} open lines for {label} color '{l['color']}' on PO {l['po']} ({opts}); took line {int(num(x['BaseLine']))} whose ordered qty equals {q:g}"
+    covers = [x for x in hits if (num(x.get("OpenQty")) or 0) >= q - 1e-6]
+    if covers:
+        x = covers[0]
+        return x, "REVIEW", f"{len(hits)} open lines for {label} color '{l['color']}' on PO {l['po']}, none with qty {q:g} ({opts}); took lowest line that covers: {int(num(x['BaseLine']))}"
+    return None, "MISMATCH", f"{len(hits)} open lines for {label} color '{l['color']}' on PO {l['po']} but none covers {q:g} ({opts})"
+
 def resolve(l, lk):
-    # match order: exact key -> C-number any color -> customer style prefix + color -> style prefix single line
-    by_key, by_po_item, _, by_po_style, by_po_cnum = lk
+    # match order: U_Proto + color -> exact key -> ItemCode -> C-number prefix + color -> style prefix + color
+    by_key, by_po_item, _, by_po_style, by_po_cnum, by_po_proto, by_po = lk
     ck = color_key(l["color"])
-    r = by_key.get(f"{l['po']}|{l['item']}|{ck}")
     status, note = "OK", ""
+    r = None
+    pc = by_po_proto.get((l["po"], l["proto"].upper()), [])  # primary key: OITM.U_Proto = packing C-number
+    if pc:
+        hit = color_hits(pc, ck)
+        blank = [x for x in pc if not color_key(x.get("U_Color"))]
+        if len(hit) == 1:
+            r = hit[0]
+        elif len(hit) > 1:
+            r, status, note = pick(hit, l, f"proto {l['proto']}")
+            if not r: return r, status, note
+        elif len(blank) == 1 and len(pc) == 1:
+            r = blank[0]
+        elif len(blank) > 1 and len(blank) == len(pc):
+            r, status, note = pick(blank, l, f"proto {l['proto']} (no color on PO lines)")
+            if not r: return r, status, note
+        else:
+            return None, "MISMATCH", f"PO {l['po']} proto {l['proto']}: no open line in color '{l['color']}'; open: {sorted(x['_item'] + ' ' + str(x.get('U_Color')) for x in pc)}"
+    if not r:
+        hit = by_key.get(f"{l['po']}|{l['item']}|{ck}", [])
+        if len(hit) == 1:
+            r = hit[0]
+        elif len(hit) > 1:
+            r, status, note = pick(hit, l, l["item"])
+            if not r: return r, status, note
     if not r:
         cands = by_po_item.get((l["po"], l["item"]), [])
-        if len(cands) == 1 and not color_key(cands[0].get("U_Color")):
+        blank = [x for x in cands if not color_key(x.get("U_Color"))]
+        if len(cands) == 1 and blank:
             r = cands[0]  # custom item, PO line carries no color: normal
+        elif len(blank) > 1 and len(blank) == len(cands):
+            r, status, note = pick(blank, l, f"{l['item']} (no color on PO lines)")
+            if not r: return r, status, note
         elif len(cands) >= 1:
             return None, "MISMATCH", f"PO {l['po']} {l['item']}: no open line in color '{l['color']}'; open: {sorted(str(c.get('U_Color')) for c in cands)}"
     if not r:
         sc = by_po_cnum.get((l["po"], l["item"].upper()), [])
-        hit = [x for x in sc if ck and (color_key(x["_item"].split("-")[2]) == ck or ck in color_key(x.get("U_Color")) or color_key(x.get("U_Color")) in ck)]
+        hit = color_hits(sc, ck)
         if len(hit) == 1:
             r = hit[0]  # C-number SKU with color/size suffix: normal
+        elif len(hit) > 1:
+            r, status, note = pick(hit, l, l["item"])
+            if not r: return r, status, note
         elif len(sc) == 1 and not hit:
             return None, "MISMATCH", f"PO {l['po']} {l['item']}: only open SKU is {sc[0]['_item']} color '{sc[0].get('U_Color')}', packing color '{l['color']}'"
         elif len(sc) > 1:
             return None, "MISMATCH", f"ambiguous: {len(sc)} open SKUs for {l['item']} on PO {l['po']}: {sorted(x['_item'] for x in sc)}; packing color '{l['color']}'"
     if not r and l.get("cust_style"):
         sc = by_po_style.get((l["po"], l["cust_style"].split("-")[0].split(".")[0].upper()), [])
-        hit = [x for x in sc if color_key(x.get("U_Color")) == ck]
+        hit = color_hits(sc, ck)
         if len(hit) == 1:
             r = hit[0]  # stock SKU keyed by customer style + color: normal
+        elif len(hit) > 1:
+            r, status, note = pick(hit, l, f"style {l['cust_style']}")
+            if not r: return r, status, note
         elif len(sc) == 1 and not color_key(sc[0].get("U_Color")):
             r, status, note = sc[0], "REVIEW", f"matched by customer style {l['cust_style']}: SAP item {sc[0]['_item']} (no color on PO line)"
         elif len(sc) >= 1:
             return None, "MISMATCH", f"PO {l['po']} style {l['cust_style']}: no open line in color '{l['color']}'; open: {sorted(x['_item'] + ' ' + str(x.get('U_Color')) for x in sc)}"
     if not r:
+        po_lines = by_po.get(l["po"], [])
+        if len(po_lines) == 1 and (num(po_lines[0].get("OpenQty")) or 0) >= l["qty"] - 1e-6:
+            x = po_lines[0]
+            r, status, note = x, "REVIEW", f"no proto/item match for {l['item']} {l['color']}; took the only open line on PO {l['po']}: {x['_item']} color '{x.get('U_Color')}'"
+    if not r:
         return None, "MISMATCH", f"PO line not found or not open: PO {l['po']} {l['item']} {l['color']}"
-    open_qty = num(r.get("OpenQty"))
-    if open_qty is not None and l["qty"] > open_qty + 1e-6:
-        status, note = "MISMATCH", f"over-receipt: packing {l['qty']} vs open {open_qty:g}" + (f"; {note}" if note else "")
     if num(r.get("Price")) in (None, 0):
         status = "MISMATCH" if status == "MISMATCH" else "REVIEW"; note = (note + "; " if note else "") + "PO price is zero/blank"
     fob, pr = num(r.get("U_FOBPrice")), num(r.get("Price"))
@@ -298,7 +365,7 @@ def resolve(l, lk):
     return r, status, note
 
 def apply_lookup(lrow, r):
-    be, bl = int(float(r["BaseEntry"])), int(float(r["BaseLine"]))
+    be, bl = int(num(r["BaseEntry"])), int(num(r["BaseLine"]))
     if r["_item"] != lrow["ItemCode"]:
         lrow["FreeTxt"] = f"packing style {lrow['ItemCode']}; " + str(lrow.get("FreeTxt") or "")
         lrow["ItemCode"] = r["_item"]
@@ -308,7 +375,7 @@ def apply_lookup(lrow, r):
     if r.get("Dscription"): lrow["Dscription"] = r["Dscription"]
     lrow["LineTotal"] = round(lrow["Quantity"] * (lrow["Price"] or 0), 2)
 
-def build(template_path, out_path, factory_paths, group="invoice", lookup_path=None):
+def build(template_path, out_path, factory_paths, group="invoice", lookup_path=None, emit_csv=False):
     tpl = load_template(template_path)
     lk = load_lookup(lookup_path) if lookup_path else None
     hdr_cols, hdr_ex = tpl["OPDN_Header"]
@@ -327,13 +394,13 @@ def build(template_path, out_path, factory_paths, group="invoice", lookup_path=N
         by_po = defaultdict(list)
         for l in h["lines"]:
             by_po[l["po"]].append(l)
-        groups = [sum((merge_same_po_line(v) for v in by_po.values()), [])] if group == "invoice" \
-            else [merge_same_po_line(v) for v in by_po.values()]
+        groups = [list(h["lines"])] if group == "invoice" else list(by_po.values())  # one GRPO line per packing row
         gen_qty = gen_ctn = gen_gw = gen_cbm = 0
         for po_lines in groups:
             docentry += 1
             hrow = header_row(h, po_lines, docentry, hdr_cols, hdr_ex)
             lrows, cardcodes, doc_total = [], set(), 0.0
+            drawn = defaultdict(lambda: [0, None, []])  # (BaseEntry, BaseLine) -> [qty, open, rows]
             for i, l in enumerate(po_lines):
                 po = l["po"]
                 lrow = line_row(h, l, docentry, i, line_cols, line_ex)
@@ -341,6 +408,11 @@ def build(template_path, out_path, factory_paths, group="invoice", lookup_path=N
                     r, status, note = resolve(l, lk)
                     if r:
                         apply_lookup(lrow, r); cardcodes.add(r["CardCode"]); doc_total += lrow["LineTotal"] or 0
+                        d = drawn[(lrow["BaseEntry"], lrow["BaseLine"])]
+                        d[0] += l["qty"]; d[1] = num(r.get("OpenQty")); d[2].append(f"{l['item']} {l['color']} ctn {l['ctn_s']}-{l['ctn_e']}")
+                        mx, px = str(r.get("U_MxPrStyl") or "").strip().upper(), (l.get("mxprstyl") or "").upper()
+                        if px and mx and mx != "NULL" and not (mx == px or mx.endswith(px) or px.endswith(mx)):
+                            ws_v.append([h["file"], f"PO {po} {l['proto']}: packing style {l['mxprstyl']} vs OITM.U_MxPrStyl {r['U_MxPrStyl']}", None, None, None, "REVIEW"])
                         if r.get("U_POPrefix") and l["prefix"] and r["U_POPrefix"] != l["prefix"]:
                             ws_v.append([h["file"], f"PO {po} prefix: packing {l['prefix']} vs SAP {r['U_POPrefix']}", None, None, None, "REVIEW"])
                     if status != "OK":
@@ -350,6 +422,9 @@ def build(template_path, out_path, factory_paths, group="invoice", lookup_path=N
                 else:
                     ws_k.append([docentry, po, l["item"], l["color"], l["qty"], "BaseEntry, BaseLine, Price, U_FOBPrice, WhsCode"])
                 lrows.append(lrow)
+            for (be, bl), (q, oq, rows_) in drawn.items():
+                if oq is not None and q > oq + 1e-6:
+                    ws_v.append([h["file"], f"over-receipt on PO line (BaseEntry {be}, line {bl}): packing {q:g} vs open {oq:g} ({'; '.join(rows_)})", None, q, oq, "MISMATCH"])
             if lk and cardcodes:
                 if len(cardcodes) > 1:
                     ws_v.append([h["file"], f"POs on this invoice belong to different vendors: {sorted(cardcodes)}", None, None, None, "MISMATCH"])
@@ -366,12 +441,10 @@ def build(template_path, out_path, factory_paths, group="invoice", lookup_path=N
                     if r0 and r0.get("U_SONo") not in (None, ""): hrow["U_SONo"] = r0["U_SONo"]
             ws_h.append(list(hrow.values())); ws_gh.append([hrow[c] for c in LEAN_HDR])
             for lrow in lrows:
-                ws_l.append(list(lrow.values())); ws_gl.append([lrow[c] for c in LEAN_LINE])
+                ws_l.append([lrow[c] for c in line_cols]); ws_gl.append([lrow[c] for c in LEAN_LINE])
             for i, l in enumerate(po_lines):
                 po = l["po"]
                 gen_qty += l["qty"]; gen_ctn += l["ctn"]; gen_gw += l["gw"]; gen_cbm += l["cbm"]
-                if l.get("mixed"):
-                    ws_v.append([h["file"], f"PO {po} {l['item']} {l['color']}: mixed packing {l['mixed']} merged into one line", None, None, l["qty"], "REVIEW"])
         for po in by_po:
             if po in po_seen:
                 ws_v.append([h["file"], f"PO {po} also on {po_seen[po]} (split shipment, partial receipt)", None, None, None, "REVIEW"])
@@ -404,7 +477,37 @@ def build(template_path, out_path, factory_paths, group="invoice", lookup_path=N
             for c in col:
                 if isinstance(c.value, dt.datetime): c.number_format = "yyyy-mm-dd"
     wb.save(out_path)
+    print_summary(out_path, wb, emit_csv)
     return out_path
+
+def print_summary(out_path, wb, emit_csv=False):
+    # stdout report so the agent can relay results without re-opening the workbook
+    import csv, io
+    gh = wb["GRPO_Header"]; gl = wb["GRPO_Lines"]; v = wb["Validation"]
+    hh = [c.value for c in gh[1]]; hd = dict(zip(hh, [c.value for c in gh[2]])) if gh.max_row > 1 else {}
+    lh = [c.value for c in gl[1]]; lines = [dict(zip(lh, r)) for r in gl.iter_rows(min_row=2, values_only=True)]
+    vrows = [r for r in v.iter_rows(min_row=2, values_only=True)]
+    review = [r for r in vrows if r[5] == "REVIEW"]; mism = [r for r in vrows if r[5] == "MISMATCH"]
+    unresolved = wb["Lookups_Needed"].max_row - 1
+    exported = next((r[1].split("ExportedAt ", 1)[1] for r in vrows if "ExportedAt" in str(r[1])), "none")
+    pcs = sum(l["Quantity"] or 0 for l in lines); pos = sorted({l["BaseRef"] for l in lines})
+    blocking = mism or unresolved or any("FOB" in str(r[1]) for r in review)
+    print("=== GRPO SUMMARY ===")
+    print(f"File: {out_path.split('/')[-1]}")
+    print(f"Invoice: {hd.get('NumAtCard')}  Date: {hd.get('DocDate'):%Y-%m-%d}" if hd.get("DocDate") else f"Invoice: {hd.get('NumAtCard')}")
+    print(f"Vendor: {hd.get('CardCode')} {hd.get('CardName')}")
+    print(f"GRPOs: {gh.max_row - 1}  Lines: {len(lines)}  Distinct POs: {len(pos)}")
+    print(f"Pieces: {pcs:,}  Cartons: {hd.get('U_NumCartons')}  Gross kg: {hd.get('U_GrossWeight')}  CBM: {hd.get('U_CubeMeters')}")
+    print(f"Lookup snapshot ExportedAt: {exported}")
+    print(f"REVIEW: {len(review)}  MISMATCH: {len(mism)}  Unresolved lookups: {unresolved}")
+    print("Ready to post: " + ("NO" if blocking else "YES"))
+    for r in mism: print(f"  MISMATCH - {r[1]}")
+    for r in review: print(f"  REVIEW   - {r[1]}")
+    if emit_csv:
+        for name, ws in (("GRPO_Header", gh), ("GRPO_Lines", gl)):
+            buf = io.StringIO(); w = csv.writer(buf)
+            for r in ws.iter_rows(values_only=True): w.writerow(["" if x is None else x for x in r])
+            print(f"=== CSV {name} ===\n{buf.getvalue().rstrip()}")
 
 if __name__ == "__main__":
     args = sys.argv[1:]
@@ -413,7 +516,17 @@ if __name__ == "__main__":
             i = args.index(name); v = args[i + 1]; del args[i:i + 2]; return v
         return default
     group = opt("--group", "invoice"); lookup = opt("--lookup", None)
-    template, out_dir, files = args[0], args[1], args[2:]
+    emit_csv = "--emit-csv" in args; args = [a for a in args if a != "--emit-csv"]
+    # positional: [template.xlsx] [out_dir] factory.xls...  - template and out_dir are optional
+    template = next((a for a in args if a.lower().endswith(".xlsx") and "opdn" in os.path.basename(a).lower()), None)
+    if template: args.remove(template)
+    else: template = os.path.join(HERE, "..", "examples", "OPDN_Excel_template.xlsx")
+    files = [a for a in args if a.lower().endswith((".xls", ".xlsx"))]
+    rest = [a for a in args if a not in files]
+    out_dir = rest[0] if rest else os.path.join(os.getcwd(), "out")
+    os.makedirs(out_dir, exist_ok=True)
+    if not files:
+        sys.exit("usage: build_opdn.py <factory.xls> [...] [--lookup po_lookup.xlsx] [--group invoice|po] [--emit-csv] [template.xlsx] [out_dir]")
     for f in files:
         inv = re.sub(r"[^A-Za-z0-9]+", "_", parse_factory(f)["invoice_no"]).strip("_")
-        print(build(template, f"{out_dir}/OPDN_upload_{inv}.xlsx", [f], group, lookup))
+        build(template, f"{out_dir}/OPDN_upload_{inv}.xlsx", [f], group, lookup, emit_csv)

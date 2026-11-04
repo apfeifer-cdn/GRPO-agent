@@ -29,14 +29,14 @@ Tolerance 0.01 (weights, CBM), exact for counts.
 ## 3. Structure
 - One GRPO per invoice (one container, many POs). Report distinct PO count; no flag.
 - A PO whose rows carry more than one prefix → REVIEW (likely a factory typo).
-- Same PO + ItemCode + color on multiple rows → merged; REVIEW with the packing split.
+- Same PO + style + color on multiple rows → two lines on the same PO line; no flag. Over-receipt uses the summed qty.
 - Same PO on more than one invoice in the batch → REVIEW "split shipment, partial receipt".
 - Same ItemCode on the same PO in two colors is normal (two PO lines) - no flag.
 
 ## 4. SAP consistency (only when a lookup source is available)
 - PO exists, is open, vendor on PO = CardCode.
-- PO line found for ItemCode + color (case-insensitive, ignore `/`, `-`, spaces). No match → MISMATCH.
-- Received Quantity ≤ PO line open quantity. Over-receipt → MISMATCH with both numbers.
+- PO line found for U_Proto + color (case-insensitive, ignore `/`, `-`, spaces, GREY=GRAY). No match → MISMATCH.
+- Sum of received Quantity per PO line ≤ open quantity. Over-receipt → MISMATCH with both numbers.
 - Price populated from the PO line; `Price = 0` → REVIEW.
 - WhsCode populated.
 

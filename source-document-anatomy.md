@@ -66,15 +66,15 @@ The table ends at the first row with a blank `CTN. (S)`; that row carries the to
   `SPO120599  91690` → prefix `SPO`, PO `120599`, cust ref `91690`.
   `3BM121109  371331A` → `3BM`, `121109`, `371331A`. The ref may be absent or contain letters.
   Prefixes seen: 3BM ANL BDA DON GLD MCK MPC NRS SPP TIG TSI WPM SPO VAC. Example GRPO used `ABM`.
-- **STYLE#**: text before `(` is a DRI C-number (`C17-06417`, `C4-2134`) or a full code
-  (`DON-1400CT-000`); text inside parens is the customer's style (`SP500`, `2004975560001`,
-  `AUD4000.BK`). For custom items the C-number is the SAP ItemCode. For stock/program items SAP's
-  ItemCode is `<style>-<color code>-<size>` (`SP500-PACBL-OS`) and the C-number will not match -
-  see the match order in `po-lookup-table.md`.
+- **STYLE#**: text before `(` is the DRI C-number = OITM.U_Proto (`C17-06417`, `C4-2134`,
+  `DON-1400CT-000`) - the match key. Text inside parens is the customer's style id
+  (`2004975560001`, `AUD4000.BK`), or for SPO/VAC the matrix parent style (`SP500`, `AH35`).
+  For custom items U_Proto is also the ItemCode; for stock items the ItemCode is
+  `<style>-<color code>-<size>` (`SP500-INDI-OS`). See the match order in `po-lookup-table.md`.
 - **Dates**: all `DD.MM.YYYY`. `04.05.2026` is 4 May, not 5 April.
 - **Colors**: free text, inconsistent case (`White`, `GREY-WHITE`, `Charcoal/Black`). Compare case-insensitively
   and tolerate `/`, `-`, spaces when matching PO lines.
 - **One PO may span several rows**: different colors (distinct PO lines) or the same color split across
-  carton configurations (`3x144 + 1x72` - same PO line, merge).
+  carton configurations (`3x144 + 1x72` - same PO line, two GRPO lines; never merge).
 - **One PO may span several invoices** (`SPO120599` on 4762 and 4763; `VAC120601` on 4763 and 4764).
   Each invoice produces its own partial GRPO against that PO.

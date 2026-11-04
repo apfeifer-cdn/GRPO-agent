@@ -84,10 +84,16 @@ the right home.
 | Landed-cost UDFs (U_Duty, U_MPF, U_BrokerFee, U_Freight, U_LocalWH, U_QCFee, U_Insurance, U_Finance, U_FixedCharge, U_Incremental, U_Marketing…) | copied from PO line by SAP - NULL | SYSTEM |
 | LineTotal, OpenQty, OpenSum*, StockSum*, GTotal*, AcctCode, CogsAcct, ShipToCode/Desc, TargetType/TrgetEntry | SAP computes / derives | SYSTEM |
 
-### Merge rule
-Packing rows with the same PO + ItemCode + color are one PO line. Merge: sum Quantity, cartons,
-weight, CBM; `U_CartonNo` = min start - max end; `U_PcsPerCarton` = the larger pack; note the
-split in FreeTxt and flag REVIEW in Validation.
+### No merge rule
+One PDN1 line per packing-list row, always. Two rows for the same style and color in different
+carton configurations (3×144 and 1×72) become two GRPO lines pointing at the same
+`BaseEntry`/`BaseLine`, each with its own `U_CartonNo`, `U_PcsPerCarton`, `U_NumfCart`,
+`U_CartonWeight`. Carton-level data on every line is required for reporting.
+
+### Reference-only columns on `GRPO_Lines`
+`_Proto` (packing C-number = OITM.U_Proto) and `_StyleRef` (customer style id, or matrix parent
+style for SPO/VAC). Not PDN1 columns; also written into `FreeTxt`. Add PDN1 UDFs if they are
+wanted on the SAP line.
 
 ### Lookup placeholders
 Where the agent has no SAP access, write `LOOKUP:<key>` in the cell, e.g.

@@ -21,6 +21,8 @@ SELECT
     H.U_CustRefNo,
     H.U_SONo,
     L.ItemCode,
+    I.U_Proto,
+    I.U_MxPrStyl,
     L.Dscription,
     L.U_Color,
     L.Quantity        AS OrderedQty,
@@ -32,11 +34,15 @@ SELECT
     GETDATE()         AS ExportedAt
 FROM OPOR H
 JOIN POR1 L ON L.DocEntry = H.DocEntry
+LEFT JOIN OITM I ON I.ItemCode = L.ItemCode
 WHERE H.DocStatus = 'O'
   AND L.LineStatus = 'O'
   AND H.CANCELED = 'N'
 ORDER BY H.DocNum, L.LineNum;
 ```
+
+`LEFT JOIN OITM` because service lines have no ItemCode. `LookupKey` is informational; the
+join always rebuilds its keys from `PONum`, `ItemCode`, `U_Proto` and `U_Color`.
 
 Optional scope: `AND H.CardCode IN (...)` for offshore factory vendors. If `U_Color` or
 `U_FOBPrice` do not exist on POR1, drop them and match on ItemCode only (see fallback below).
@@ -51,6 +57,8 @@ Optional scope: `AND H.CardCode IN (...)` for offshore factory vendors. If `U_Co
 | CardCode, CardName | text | → OPDN `CardCode`, PDN1 `BaseCard`; verify every PO on an invoice shares one CardCode |
 | U_POPrefix, U_CustRefNo, U_SONo | text | header UDFs when the invoice has a single PO; cross-check prefix vs packing PO# |
 | ItemCode, Dscription, U_Color | text | Dscription may replace the factory DESCRIPTION |
+| U_Proto | text | OITM.U_Proto - the DRI C-number the factory prints as STYLE#; **primary match key** |
+| U_MxPrStyl | text | OITM matrix parent style (`SP500`); cross-checked against the packing paren text for SPO/VAC |
 | OrderedQty, OpenQty | number | over-receipt check: packing qty ≤ OpenQty |
 | Price, U_FOBPrice | number | → PDN1 `Price`, `U_FOBPrice` |
 | WhsCode | text | → PDN1 `WhsCode` |
@@ -67,44 +75,51 @@ Optional scope: `AND H.CardCode IN (...)` for offshore factory vendors. If `U_Co
 
 ## Agent matching procedure
 
-Three shapes of SAP ItemCode appear on PO lines:
-- **Custom item, plain C-number**: `C26-03388`. PO line usually has no `U_Color`. The packing
-  list's STYLE# before the parenthesis is this code.
-- **Custom item with color/size suffix**: `C24-02235-KHA-OS`, `U_Color` `11Khaki`. Packing
-  shows `C24-02235` and color `KHA`.
-- **Stock / program item**: `<customer style>-<color code>-<size>`, `SP500-INDI-OS`,
-  `U_Color` `NAVY`. Packing shows a C-number plus the style in parentheses
-  (`C17-06417(SP500)`); the C-number is **not** the SAP ItemCode.
+Packing STYLE# = `<U_Proto>(<style>)`. The text before the parenthesis is OITM.U_Proto on the
+SAP item - for custom items it is also the ItemCode (`C26-03388`, or `C24-02235-KHA-OS` with a
+color/size suffix); for stock/program items the ItemCode is `<matrix parent style>-<color
+code>-<size>` (`SP500-INDI-OS`) and only U_Proto carries the C-number. The paren text is the
+customer style id, except for SPO/VAC where it is the matrix parent style (OITM.U_MxPrStyl).
 
-Match order, per packing line (PO = 6-digit number; COLORKEY = color upper-cased, `/ -` and
-spaces removed, GREY→GRAY):
-1. `LookupKey` = `PO|ItemCode|COLORKEY` → exact hit → OK.
-2. `PO + ItemCode` exact, one open line, **no color on the PO line** → OK (custom item, normal).
-   Open lines exist in other colors → MISMATCH listing them.
-3. `PO + C-number prefix` (SAP ItemCode starts with the packing C-number + `-`): take the line
-   whose color segment equals COLORKEY or whose `U_Color` contains it → OK (normal; not logged).
-   One SKU with a different color → MISMATCH. Several → MISMATCH listing them.
-4. `PO + style prefix` (ItemCode before the first `-` equals the parenthesised style) and
-   COLORKEY equals the line's `U_Color` → OK (normal; not logged); write SAP's ItemCode on the
-   line, keep the packing C-number in FreeTxt. Style with one colorless line → REVIEW.
-   Otherwise MISMATCH listing open lines.
-5. Packing qty > `OpenQty` → MISMATCH "over-receipt <qty> vs open <OpenQty>".
+Match order, per packing row (PO = 6-digit number; COLORKEY = color upper-cased, `/ -` and
+spaces removed, GREY→GRAY). A line "matches the color" when COLORKEY equals the line's
+`U_Color` **or the color segment of its ItemCode** (`C24-00925-CHR-OS` ↔ packing `CHR`, SAP
+`U_Color` `26Charcoal`); failing both, containment of 3+ characters (`KHA` in `11Khaki`).
+1. `PO + U_Proto` lines that match the color → OK. One line for the proto with no color →
+   OK. Several colorless lines → rule 4a. Lines exist but none match → MISMATCH listing them.
+2. No `U_Proto` on the PO lines (old items, or export without OITM): `PO + ItemCode + COLORKEY`
+   exact → OK; `PO + ItemCode` one colorless line → OK; other colors → MISMATCH.
+3. `PO + C-number prefix` (ItemCode starts with the packing C-number + `-`) with color segment
+   or `U_Color` equal to COLORKEY → OK.
+4. `PO + style prefix` (ItemCode before the first `-` = paren text) with `U_Color` =
+   COLORKEY → OK. One colorless line → REVIEW. Otherwise MISMATCH listing open lines.
+4a. **Several open lines in the same color** (same SKU ordered twice on one PO, or a split
+   line): **quantity decides.** The line whose `OpenQty` equals the packing row quantity →
+   OK, silent. None exact: a line whose `OrderedQty` equals the row (partially received) →
+   REVIEW. None: lowest `LineNum` whose `OpenQty` covers the row → REVIEW naming the
+   alternatives. None covers → MISMATCH. Applies on every rule above.
+5. **One GRPO line per packing row - never merge.** Two rows can reference the same PO line
+   (same style and color packed in two carton configurations). Over-receipt is checked on the
+   **sum** of packing qty per `BaseEntry`+`BaseLine` against `OpenQty` → MISMATCH.
 6. `U_FOBPrice` > 20 × `Price` or > 50 → REVIEW "FOB price looks wrong" (PO data error).
-7. All POs on the invoice must resolve to the same `CardCode`; otherwise MISMATCH.
-8. **Vendor comes from the PO, not from the shipper name.** The factory on the documents can be
-   a sub-factory of the PO vendor (Unimas ships against POs placed on Mainland Sewing V00313).
-   `CardCode`/`CardName` = PO vendor; shipper name goes to Comments. Not logged - this is the
-   normal case.
-9. Packing PO prefix ≠ `U_POPrefix` on the PO → REVIEW.
-10. Report `ExportedAt` in the summary. If older than 24 h, say "lookup snapshot is <n> hours old".
+7. SPO/VAC paren text ≠ OITM.U_MxPrStyl (after allowing a prefix, `6440` = `VC6440`) → REVIEW.
+7a. Nothing above matched and the PO has exactly one open line whose `OpenQty` covers the row
+   (customer styles printed without a C-number, e.g. `#83904TF`) → take it, REVIEW.
+8. All POs on the invoice must resolve to the same `CardCode`; otherwise MISMATCH.
+9. Vendor comes from the PO, not from the shipper name (Unimas ships against POs placed on
+   Mainland Sewing V00313). `CardCode`/`CardName` = PO vendor; shipper to Comments. Not logged.
+10. Packing PO prefix ≠ `U_POPrefix` on the PO → REVIEW.
+11. Report `ExportedAt` in the summary. If older than 24 h, say "lookup snapshot is <n> hours old".
 
-Only exceptions are logged: a line that did not resolve, a color conflict, over-receipt, a
-price anomaly, or a vendor conflict between POs. Key translation (C-number → suffixed SKU,
-style → stock SKU) and a shipper that differs from the PO vendor are correct behavior and stay
-silent.
+Only exceptions are logged: a row that did not resolve, a color conflict, over-receipt, a price
+anomaly, a style cross-check failure, or a vendor conflict between POs. Key translation and a
+shipper that differs from the PO vendor are correct behavior and stay silent.
 
 Never match a packing color to an open line of a different color. A wrong line posts stock
 against the wrong SKU and closes a PO line that was never delivered.
+
+Multiple GRPO lines drawing from one PO line is standard DI API / Service Layer behavior as
+long as the total does not exceed the open quantity. Confirm once in the test company.
 
 In DRI's database `BaseEntry` (DocEntry) equals `PONum` (DocNum) on every open PO line, so a
 PO number from the packing list is also its DocEntry. Still take `BaseEntry` from the table.
@@ -137,7 +152,7 @@ is in place.
 ## Running the join
 
 ```
-python scripts/build_opdn.py examples/OPDN_Excel_template.xlsx <out_dir> <factory.xls> --lookup <po_lookup.csv|.xlsx>
+python scripts/build_opdn.py "<factory.xls>" --lookup "<po-lookup-table.xlsx>"     # output in ./out/
 ```
 
 The export's first sheet (or the CSV) must carry the schema above; `LookupKey` is used when
@@ -147,5 +162,5 @@ present, otherwise built from `PONum`, `ItemCode`, `U_Color`. Resolved lines get
 `U_SONo` on single-PO receipts. Unresolved lines keep `LOOKUP:` cells and appear on
 `Lookups_Needed` with the reason. `examples/po_lookup_SAMPLE_fake_values.csv` is a fabricated
 table for invoice 4762 (fake DocEntry, price 2.50, vendor V99999) that exercises every path:
-one color-spelling fallback (REVIEW), one missing PO (MISMATCH), one over-receipt (MISMATCH).
-`examples/with-lookup/` holds the result.
+a GREY/GRAY spelling (silent match), one missing PO (MISMATCH), one over-receipt (MISMATCH).
+`examples/OPDN_upload_EX_UNI_4762_2026_with-lookup.xlsx` is the result.
